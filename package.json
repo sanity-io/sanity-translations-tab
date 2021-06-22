@@ -1,0 +1,65 @@
+{
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint src test",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "peerDependencies": {
+    "@sanity/ui": "^0.32 || ^0.33",
+    "react": "^16 || ^17",
+    "react-dom": "^16 || ^17",
+    "styled-components": "^5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint src test"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "name": "sanity-translations-tab",
+  "author": "Sanity.io",
+  "module": "dist/sanity-translations-tab.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/sanity-translations-tab.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/sanity-translations-tab.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@sanity/client": "^2.0.9",
+    "@sanity/ui": "^0.32 || ^0.33",
+    "@size-limit/preset-small-lib": "^4.7.0",
+    "@types/react": "^16.9.56",
+    "framer-motion": "^2.9.4",
+    "husky": "^4.3.0",
+    "size-limit": "^4.7.0",
+    "styled-components": "^5.2.1",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.0.3",
+    "typescript": "^4.0.5"
+  }
+}
