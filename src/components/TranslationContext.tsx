@@ -1,6 +1,5 @@
 import React from 'react'
-
-import { Adapter } from '../types'
+import { Adapter, Secrets } from '../types'
 
 export type ContextProps = {
   documentId: string
@@ -9,7 +8,9 @@ export type ContextProps = {
     languageId: string,
     document: Record<string, any>
   ) => Promise<void>
+  exportForTranslation: (documentId: string) => Promise<Record<string, any>>
   baseLanguage: string
+  secrets: Secrets
 }
 
 export const TranslationContext = React.createContext<ContextProps | null>(null)
