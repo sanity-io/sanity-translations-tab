@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import sanityClient, { SanityDocumentStub } from '@sanity/client'
+import sanityClient from 'part:@sanity/base/client'
+import { SanityDocumentStub } from '@sanity/client'
 
-const client = sanityClient({ apiVersion: '2021-03-25' })
+const client = sanityClient.withConfig({ apiVersion: '2021-03-25' })
 
 export function useSecrets<T>(id: string) {
   const [loading, setLoading] = useState<boolean>(true)
