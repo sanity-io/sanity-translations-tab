@@ -51,8 +51,13 @@ export const DummyAdapter: Adapter = {
       resolve(result)
     })
   },
-  createTask: async (documentId: string, localeIds: string[]) => {
+  createTask: async (
+    documentId: string,
+    document: Record<string, any>,
+    localeIds: string[]
+  ) => {
     return new Promise(resolve => {
+      console.log(document)
       const task: TranslationTask = {
         taskId: new Date().getTime().toString(),
         documentId,

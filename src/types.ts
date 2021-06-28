@@ -22,19 +22,20 @@ export type Secrets = {
 }
 
 export interface Adapter {
-  getLocales: (secrets: Secrets) => Promise<TranslationLocale[]>
+  getLocales: (secrets: Secrets | null) => Promise<TranslationLocale[]>
   getTranslationTask: (
     documentId: string,
-    secrets: Secrets
+    secrets: Secrets | null
   ) => Promise<TranslationTask | null>
   createTask: (
     documentId: string,
     document: Record<string, any>,
-    secrets: Secrets
+    localeIds: string[],
+    secrets: Secrets | null
   ) => Promise<TranslationTask>
   getTranslation: (
     taskid: string,
     localeId: string,
-    secrets: Secrets
+    secrets: Secrets | null
   ) => Promise<any | null>
 }

@@ -56,7 +56,7 @@ const TranslationTab = (props: TranslationTabProps) => {
     return exportTranslationFunc(id)
   }
 
-  const { loading, secrets } = useSecrets<Secrets>('transifex.secrets')
+  const { loading, secrets } = useSecrets<Secrets>('translationService.secrets')
 
   const hasErrors = errors.length > 0
 
@@ -65,7 +65,8 @@ const TranslationTab = (props: TranslationTabProps) => {
   } else if (!secrets) {
     return (
       <span>
-        Can't find secrets for Transifex. Did you load them into this datastore?
+        Can't find secrets for your translation service. Did you load them into
+        this datastore?
       </span>
     )
   } else {
