@@ -75,7 +75,7 @@ export const NewTask = ({ locales }: Props) => {
         context.adapter.createTask(
           context.documentId,
           serialized,
-          selectedLocales.map(l => l.toString()),
+          selectedLocales as string[],
           context.secrets
         )
       )

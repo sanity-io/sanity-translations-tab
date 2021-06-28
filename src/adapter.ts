@@ -57,7 +57,6 @@ export const DummyAdapter: Adapter = {
     localeIds: string[]
   ) => {
     return new Promise(resolve => {
-      console.log(document)
       const task: TranslationTask = {
         taskId: new Date().getTime().toString(),
         documentId,
