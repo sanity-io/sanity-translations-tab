@@ -4,19 +4,10 @@ import { NewTask } from './NewTask'
 import { TaskView } from './TaskView'
 import { Box } from '@sanity/ui'
 import { TranslationTask, TranslationLocale } from '../types'
-/*
-import { SettingsView } from './Settings'
-*/
 
 export const TranslationView = () => {
   const [locales, setLocales] = useState<TranslationLocale[]>([])
   const [task, setTask] = useState<TranslationTask | null>(null)
-
-  /*
-  const [open, setOpen] = useState(false)
-  const onClose = useCallback(() => setOpen(false), [])
-  const onOpen = useCallback(() => setOpen(true), [])
-  */
 
   const context = useContext(TranslationContext)
 
