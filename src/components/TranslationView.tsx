@@ -18,9 +18,14 @@ export const TranslationView = () => {
         return
       }
       context.adapter
-        .getLocales()
+        .getLocales(context.secrets)
         .then(setLocales)
-        .then(() => context.adapter.getTranslationTask(context.documentId))
+        .then(() =>
+          context.adapter.getTranslationTask(
+            context.documentId,
+            context.secrets
+          )
+        )
         .then(setTask)
     }
     fetchData()

@@ -51,7 +51,12 @@ export const DummyAdapter: Adapter = {
       resolve(result)
     })
   },
-  createTask: async (documentId: string, localeIds: string[]) => {
+  createTask: async (
+    documentId: string,
+    document: Record<string, any>,
+    localeIds: string[]
+  ) => {
+    console.debug('Sending over serialized document', document)
     return new Promise(resolve => {
       const task: TranslationTask = {
         taskId: new Date().getTime().toString(),

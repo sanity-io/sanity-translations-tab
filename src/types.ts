@@ -15,15 +15,28 @@ export type TranslationTaskLocaleStatus = {
   progress: number
 }
 
+export type Secrets = {
+  organization: string
+  project: string
+  token: string | null
+  secret: string | null
+}
+
 export interface Adapter {
-  getLocales: () => Promise<TranslationLocale[]>
-  getTranslationTask: (documentId: string) => Promise<TranslationTask | null>
+  getLocales: (secrets: Secrets | null) => Promise<TranslationLocale[]>
+  getTranslationTask: (
+    documentId: string,
+    secrets: Secrets | null
+  ) => Promise<TranslationTask | null>
   createTask: (
     documentId: string,
-    localeIds: string[]
+    document: Record<string, any>,
+    localeIds: string[],
+    secrets: Secrets | null
   ) => Promise<TranslationTask>
   getTranslation: (
     taskid: string,
-    localeId: string
-  ) => Promise<Record<string, any> | null>
+    localeId: string,
+    secrets: Secrets | null
+  ) => Promise<any | null>
 }

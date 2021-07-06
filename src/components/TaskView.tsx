@@ -19,14 +19,16 @@ export const TaskView = ({ task, locales }: JobProps) => {
       return
     }
 
-    context.adapter.getTranslation(task.taskId, localeId).then(record => {
-      if (record) {
-        context.importTranslation(localeId, record)
-      } else {
-        // TODO: Handle this in a toast
-        alert('Error getting the translated content!')
-      }
-    })
+    context.adapter
+      .getTranslation(task.taskId, localeId, context.secrets)
+      .then(record => {
+        if (record) {
+          context.importTranslation(localeId, record)
+        } else {
+          // TODO: Handle this in a toast
+          alert('Error getting the translated content!')
+        }
+      })
   }
 
   return (

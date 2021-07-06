@@ -2,6 +2,7 @@ import React from 'react'
 import { SanityDocument } from '@sanity/client'
 import { TranslationContext } from './TranslationContext'
 import { TranslationView } from './TranslationView'
+import { useSecrets } from '../hooks/useSecrets'
 import {
   ThemeProvider,
   ToastProvider,
@@ -10,7 +11,7 @@ import {
   Layer,
   Container,
 } from '@sanity/ui'
-import { Adapter } from '../types'
+import { Adapter, Secrets } from '../types'
 
 type TranslationTabProps = {
   document: {
@@ -19,7 +20,7 @@ type TranslationTabProps = {
   options: {
     adapter: Adapter
     baseLanguage: string
-    exportForTranslation: () => void
+    exportForTranslation: (id: string) => Promise<Record<string, any>>
     importTranslation: (
       id: string,
       localeId: string,
@@ -44,31 +45,57 @@ const TranslationTab = (props: TranslationTabProps) => {
     return importTranslationFunc(documentId, localeId, doc)
   }
 
+  const exportTranslationFunc = props.options.exportForTranslation
+  if (!exportTranslationFunc) {
+    errors.push(
+      'You need to provide an exportForTranslation function. See documentation.'
+    )
+  }
+
+  const exportForTranslation = (id: string) => {
+    return exportTranslationFunc(id)
+  }
+
+  const { loading, secrets } = useSecrets<Secrets>('translationService.secrets')
+
   const hasErrors = errors.length > 0
 
-  return (
-    <ThemeProvider theme={studioTheme}>
-      <Container width={1} paddingTop={4} marginBottom={0}>
-        <Layer zOffset={1000}>
-          <ToastProvider>
-            {hasErrors && errors.map(e => <Text>{e}</Text>)}
-            {!hasErrors && (
-              <TranslationContext.Provider
-                value={{
-                  documentId,
-                  adapter: props.options.adapter,
-                  baseLanguage: props.options.baseLanguage,
-                  importTranslation,
-                }}
-              >
-                <TranslationView />
-              </TranslationContext.Provider>
-            )}
-          </ToastProvider>
-        </Layer>
-      </Container>
-    </ThemeProvider>
-  )
+  if (loading || !secrets) {
+    return <span>Loading...</span>
+  } else if (!secrets) {
+    return (
+      <span>
+        Can't find secrets for your translation service. Did you load them into
+        this datastore?
+      </span>
+    )
+  } else {
+    return (
+      <ThemeProvider theme={studioTheme}>
+        <Container width={1} paddingTop={4} marginBottom={0}>
+          <Layer zOffset={1000}>
+            <ToastProvider>
+              {hasErrors && errors.map(e => <Text>{e}</Text>)}
+              {!hasErrors && (
+                <TranslationContext.Provider
+                  value={{
+                    documentId,
+                    secrets,
+                    importTranslation,
+                    exportForTranslation,
+                    adapter: props.options.adapter,
+                    baseLanguage: props.options.baseLanguage,
+                  }}
+                >
+                  <TranslationView />
+                </TranslationContext.Provider>
+              )}
+            </ToastProvider>
+          </Layer>
+        </Container>
+      </ThemeProvider>
+    )
+  }
 }
 
 export default TranslationTab

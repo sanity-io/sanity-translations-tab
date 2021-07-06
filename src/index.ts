@@ -1,3 +1,4 @@
 import TranslationsTab from './components/TranslationsTab'
 import { DummyAdapter } from './adapter'
-export { TranslationsTab as TranslationTab, DummyAdapter }
+import { Secrets, Adapter } from './types'
+export { Secrets, Adapter, TranslationsTab, DummyAdapter }

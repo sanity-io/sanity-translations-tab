@@ -57,7 +57,7 @@ export const NewTask = ({ locales }: Props) => {
 
   const toggleLocale = (locale: string, selected: boolean) => {
     if (!selected) {
-      setSelectedLocales(selectedLocales.filter(l => l == locale))
+      setSelectedLocales(selectedLocales.filter(l => l === locale))
     } else if (!selectedLocales.includes(locale)) {
       setSelectedLocales([...selectedLocales, locale])
     }
@@ -69,8 +69,16 @@ export const NewTask = ({ locales }: Props) => {
       return
     }
     setIsBusy(true)
-    context.adapter
-      .createTask(context.documentId, selectedLocales as string[])
+    context
+      .exportForTranslation(context.documentId)
+      .then(serialized =>
+        context.adapter.createTask(
+          context.documentId,
+          serialized,
+          selectedLocales as string[],
+          context.secrets
+        )
+      )
       .then(() => {
         setIsBusy(false)
       })
