@@ -56,6 +56,7 @@ export const DummyAdapter: Adapter = {
     document: Record<string, any>,
     localeIds: string[]
   ) => {
+    console.debug('Sending over serialized document', document)
     return new Promise(resolve => {
       const task: TranslationTask = {
         taskId: new Date().getTime().toString(),
