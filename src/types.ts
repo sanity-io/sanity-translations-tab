@@ -18,7 +18,8 @@ export type TranslationTaskLocaleStatus = {
 export type Secrets = {
   organization: string
   project: string
-  token: string
+  token: string | null
+  secret: string | null
 }
 
 export interface Adapter {
