@@ -20,7 +20,7 @@ type TranslationTabProps = {
   options: {
     adapter: Adapter
     baseLanguage: string
-    secretsNamespace: string
+    secretsNamespace: string | null
     exportForTranslation: (id: string) => Promise<Record<string, any>>
     importTranslation: (
       id: string,
