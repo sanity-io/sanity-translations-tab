@@ -58,7 +58,7 @@ const TranslationTab = (props: TranslationTabProps) => {
   }
 
   const { loading, secrets } = useSecrets<Secrets>(
-    `${props.options.secretsNamespace}.secrets`
+    `${props.options.secretsNamespace || 'translationService'}.secrets`
   )
 
   const hasErrors = errors.length > 0
