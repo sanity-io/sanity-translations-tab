@@ -20,6 +20,7 @@ type TranslationTabProps = {
   options: {
     adapter: Adapter
     baseLanguage: string
+    secretsNamespace: string
     exportForTranslation: (id: string) => Promise<Record<string, any>>
     importTranslation: (
       id: string,
@@ -56,7 +57,9 @@ const TranslationTab = (props: TranslationTabProps) => {
     return exportTranslationFunc(id)
   }
 
-  const { loading, secrets } = useSecrets<Secrets>('translationService.secrets')
+  const { loading, secrets } = useSecrets<Secrets>(
+    `${props.options.secretsNamespace}.secrets`
+  )
 
   const hasErrors = errors.length > 0
 

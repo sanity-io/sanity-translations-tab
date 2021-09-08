@@ -16,6 +16,7 @@ const App = () => {
   const options = {
     adapter: DummyAdapter,
     baseLanguage: "en",
+    secretsNamespace: "translationService",
     exportForTranslation: () => {},
     importTranslation: (id: string, localeId: string, doc: Record<string, any>) => {}
   }
