@@ -15,7 +15,7 @@ const addTask = (task: TranslationTask) => {
 }
 
 const getTaskDetails = (taskId: string): TranslationTask | null => {
-  const task = getTasks().find((t) => t.taskId === taskId)
+  const task = getTasks().find(t => t.taskId === taskId)
   return task ? task : null
 }
 
@@ -23,7 +23,7 @@ const getTaskDetails = (taskId: string): TranslationTask | null => {
 // localStorage and returns the same translation for any content it receives.
 export const DummyAdapter: Adapter = {
   getLocales: async () => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       resolve([
         {
           enabled: true,
@@ -45,7 +45,7 @@ export const DummyAdapter: Adapter = {
   },
   getTranslationTask: async (documentId: string) => {
     console.debug('Fetching translation tasks for document', documentId)
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const tasks = getTasks()
       const result = tasks.length ? tasks[tasks.length - 1] : null
       resolve(result)
@@ -57,11 +57,11 @@ export const DummyAdapter: Adapter = {
     localeIds: string[]
   ) => {
     console.debug('Sending over serialized document', document)
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const task: TranslationTask = {
         taskId: new Date().getTime().toString(),
         documentId,
-        locales: localeIds.map((l) => ({
+        locales: localeIds.map(l => ({
           localeId: l,
           progress: 80,
         })),
@@ -78,7 +78,7 @@ export const DummyAdapter: Adapter = {
       return null
     }
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       resolve({
         _id: task.documentId,
         title: 'This is just a dummy translation',

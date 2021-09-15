@@ -53,7 +53,7 @@ export const NewTask = ({ locales }: Props) => {
 
   const toggleLocale = (locale: string, selected: boolean) => {
     if (!selected) {
-      setSelectedLocales(selectedLocales.filter((l) => l !== locale))
+      setSelectedLocales(selectedLocales.filter(l => l !== locale))
     } else if (!selectedLocales.includes(locale)) {
       setSelectedLocales([...selectedLocales, locale])
     }
@@ -67,7 +67,7 @@ export const NewTask = ({ locales }: Props) => {
     setIsBusy(true)
     context
       .exportForTranslation(context.documentId)
-      .then((serialized) => {
+      .then(serialized => {
         return context.adapter.createTask(
           context.documentId,
           serialized,
@@ -80,7 +80,7 @@ export const NewTask = ({ locales }: Props) => {
       })
   }
 
-  const possibleLocales = locales.filter((locale) => locale.enabled !== false)
+  const possibleLocales = locales.filter(locale => locale.enabled !== false)
 
   return (
     <Stack space={3}>
@@ -101,14 +101,14 @@ export const NewTask = ({ locales }: Props) => {
                   []
                 : // Enable all
                   locales
-                    .filter((locale) => locale.enabled !== false)
-                    .map((locale) => locale.localeId)
+                    .filter(locale => locale.enabled !== false)
+                    .map(locale => locale.localeId)
             )
           }
         />
       </Flex>
       <Grid columns={[1, 1, 2, 3]} gap={1}>
-        {(locales || []).map((l) => (
+        {(locales || []).map(l => (
           <LocaleCheckbox
             key={l.localeId}
             locale={l}

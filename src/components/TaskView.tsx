@@ -22,7 +22,7 @@ export const TaskView = ({ task, locales }: JobProps) => {
 
     context.adapter
       .getTranslation(task.taskId, localeId, context.secrets)
-      .then((record) => {
+      .then(record => {
         if (record) {
           context.importTranslation(localeId, record)
         } else {
@@ -38,9 +38,9 @@ export const TaskView = ({ task, locales }: JobProps) => {
         Current job progress
       </Text>
       <Box>
-        {task.locales.map((localeTask) => {
+        {task.locales.map(localeTask => {
           const reportPercent = localeTask.progress || 0
-          const locale = locales.find((l) => l.localeId === localeTask.localeId)
+          const locale = locales.find(l => l.localeId === localeTask.localeId)
           return (
             <LanguageStatus
               key={[task.taskId, localeTask.localeId].join('.')}

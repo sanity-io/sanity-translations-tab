@@ -77,7 +77,7 @@ const TranslationTab = (props: TranslationTabProps) => {
     }
 
     return { errors: allErrors, importTranslation, exportForTranslation }
-  }, [props.options])
+  }, [props.options, documentId])
 
   const { loading, secrets } = useSecrets<Secrets>(
     `${props.options.secretsNamespace || 'translationService'}.secrets`
@@ -114,7 +114,7 @@ const TranslationTab = (props: TranslationTabProps) => {
             <ToastProvider>
               {hasErrors && (
                 <Stack space={3}>
-                  {errors.map((error) => (
+                  {errors.map(error => (
                     <Card
                       key={error.key}
                       tone="caution"
