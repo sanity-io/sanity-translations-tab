@@ -1,16 +1,21 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { SanityDocument } from '@sanity/client'
-import { TranslationContext } from './TranslationContext'
-import { TranslationView } from './TranslationView'
-import { useSecrets } from '../hooks/useSecrets'
+import { randomKey } from '@sanity/util/content'
 import {
   ThemeProvider,
   ToastProvider,
-  studioTheme,
+  Stack,
   Text,
   Layer,
-  Container,
+  Box,
+  Card,
+  Flex,
+  Spinner,
 } from '@sanity/ui'
+
+import { TranslationContext } from './TranslationContext'
+import { TranslationView } from './TranslationView'
+import { useSecrets } from '../hooks/useSecrets'
 import { Adapter, Secrets } from '../types'
 
 type TranslationTabProps = {
@@ -34,28 +39,45 @@ const TranslationTab = (props: TranslationTabProps) => {
   const { displayed } = props.document
   const documentId = displayed._id.split('drafts.').pop() as string
 
-  const errors = []
-  const importTranslationFunc = props.options.importTranslation
-  if (!importTranslationFunc) {
-    errors.push(
-      'You need to provide an importTranslation function. See documentation.'
-    )
-  }
+  const { errors, importTranslation, exportForTranslation } = useMemo(() => {
+    let allErrors = []
 
-  const importTranslation = (localeId: string, doc: Record<string, any>) => {
-    return importTranslationFunc(documentId, localeId, doc)
-  }
+    const importTranslationFunc = props.options.importTranslation
+    if (!importTranslationFunc) {
+      allErrors.push({
+        key: randomKey(12),
+        text: (
+          <>
+            You need to provide an <code>importTranslation</code> function. See
+            documentation.
+          </>
+        ),
+      })
+    }
 
-  const exportTranslationFunc = props.options.exportForTranslation
-  if (!exportTranslationFunc) {
-    errors.push(
-      'You need to provide an exportForTranslation function. See documentation.'
-    )
-  }
+    const importTranslation = (localeId: string, doc: Record<string, any>) => {
+      return importTranslationFunc(documentId, localeId, doc)
+    }
 
-  const exportForTranslation = (id: string) => {
-    return exportTranslationFunc(id)
-  }
+    const exportTranslationFunc = props.options.exportForTranslation
+    if (!exportTranslationFunc) {
+      allErrors.push({
+        key: randomKey(12),
+        text: (
+          <>
+            You need to provide an <code>exportForTranslation</code> function.
+            See documentation.
+          </>
+        ),
+      })
+    }
+
+    const exportForTranslation = (id: string) => {
+      return exportTranslationFunc(id)
+    }
+
+    return { errors: allErrors, importTranslation, exportForTranslation }
+  }, [props.options])
 
   const { loading, secrets } = useSecrets<Secrets>(
     `${props.options.secretsNamespace || 'translationService'}.secrets`
@@ -64,21 +86,47 @@ const TranslationTab = (props: TranslationTabProps) => {
   const hasErrors = errors.length > 0
 
   if (loading || !secrets) {
-    return <span>Loading...</span>
+    return (
+      <ThemeProvider>
+        <Flex padding={5} align="center" justify="center">
+          <Spinner />
+        </Flex>
+      </ThemeProvider>
+    )
   } else if (!secrets) {
     return (
-      <span>
-        Can't find secrets for your translation service. Did you load them into
-        this datastore?
-      </span>
+      <ThemeProvider>
+        <Box padding={4}>
+          <Card tone="caution" padding={[2, 3, 4, 4]} shadow={1} radius={2}>
+            <Text>
+              Can't find secrets for your translation service. Did you load them
+              into this dataset?
+            </Text>
+          </Card>
+        </Box>
+      </ThemeProvider>
     )
   } else {
     return (
-      <ThemeProvider theme={studioTheme}>
-        <Container width={1} paddingTop={4} marginBottom={0}>
+      <ThemeProvider>
+        <Box padding={4}>
           <Layer zOffset={1000}>
             <ToastProvider>
-              {hasErrors && errors.map(e => <Text>{e}</Text>)}
+              {hasErrors && (
+                <Stack space={3}>
+                  {errors.map((error) => (
+                    <Card
+                      key={error.key}
+                      tone="caution"
+                      padding={[2, 3, 4, 4]}
+                      shadow={1}
+                      radius={2}
+                    >
+                      <Text>{error.text}</Text>
+                    </Card>
+                  ))}
+                </Stack>
+              )}
               {!hasErrors && (
                 <TranslationContext.Provider
                   value={{
@@ -95,7 +143,7 @@ const TranslationTab = (props: TranslationTabProps) => {
               )}
             </ToastProvider>
           </Layer>
-        </Container>
+        </Box>
       </ThemeProvider>
     )
   }

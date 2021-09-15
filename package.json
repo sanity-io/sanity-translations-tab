@@ -51,7 +51,7 @@
   ],
   "devDependencies": {
     "@sanity/client": "^2.11.0",
-    "@sanity/ui": "^0.32 || ^0.33",
+    "@sanity/ui": "^0.36.8",
     "@size-limit/preset-small-lib": "^4.7.0",
     "@types/react": "^16.9.56",
     "framer-motion": "^2.9.4",

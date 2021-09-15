@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { Stack } from '@sanity/ui'
 import { TranslationContext } from './TranslationContext'
+
 import { NewTask } from './NewTask'
 import { TaskView } from './TaskView'
-import { Box } from '@sanity/ui'
 import { TranslationTask, TranslationLocale } from '../types'
 
 export const TranslationView = () => {
@@ -32,9 +33,9 @@ export const TranslationView = () => {
   }, [context])
 
   return (
-    <Box>
+    <Stack space={5}>
       <NewTask locales={locales} />
       {task && <TaskView task={task} locales={locales} />}
-    </Box>
+    </Stack>
   )
 }
