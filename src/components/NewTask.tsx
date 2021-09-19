@@ -25,7 +25,7 @@ const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
       style={{ cursor: `pointer` }}
       radius={2}
     >
-      <Flex align="center" gap={3}>
+      <Flex align="center">
         <Switch
           style={{ pointerEvents: `none` }}
           disabled={locale.enabled === false}
