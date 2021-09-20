@@ -84,7 +84,7 @@ export const NewTask = ({ locales }: Props) => {
 
   return (
     <Stack space={3}>
-      <Flex align="center">
+      <Flex align="center" gap={3}>
         <Text weight="semibold" size={1}>
           Select locales
         </Text>

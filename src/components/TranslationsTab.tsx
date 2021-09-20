@@ -11,7 +11,6 @@ import {
   Card,
   Flex,
   Spinner,
-  studioTheme,
 } from '@sanity/ui'
 
 import { TranslationContext } from './TranslationContext'
@@ -88,7 +87,7 @@ const TranslationTab = (props: TranslationTabProps) => {
 
   if (loading || !secrets) {
     return (
-      <ThemeProvider theme={studioTheme}>
+      <ThemeProvider>
         <Flex padding={5} align="center" justify="center">
           <Spinner />
         </Flex>
@@ -96,7 +95,7 @@ const TranslationTab = (props: TranslationTabProps) => {
     )
   } else if (!secrets) {
     return (
-      <ThemeProvider theme={studioTheme}>
+      <ThemeProvider>
         <Box padding={4}>
           <Card tone="caution" padding={[2, 3, 4, 4]} shadow={1} radius={2}>
             <Text>
@@ -109,7 +108,7 @@ const TranslationTab = (props: TranslationTabProps) => {
     )
   } else {
     return (
-      <ThemeProvider theme={studioTheme}>
+      <ThemeProvider>
         <Box padding={4}>
           <Layer zOffset={1000}>
             <ToastProvider>
