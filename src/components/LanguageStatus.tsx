@@ -1,9 +1,12 @@
 import React from 'react'
-import { Card, Heading, Text, Flex, Box, Inline, Button } from '@sanity/ui'
+import { Flex, Card, Text, Grid, Box, Button } from '@sanity/ui'
+import { DownloadIcon } from '@sanity/icons'
+import ProgressBar from './ProgressBar'
 
 type LanguageStatusProps = {
   title: string
   progress: number
+
   importFile: Function
 }
 
@@ -12,37 +15,30 @@ export const LanguageStatus = ({
   progress,
   importFile,
 }: LanguageStatusProps) => {
-  const progressWrapperStyle = {
-    height: '5px',
-    border: '1px black solid',
-    width: 200,
-  }
-  const progressStyle = {
-    height: '5px',
-    backgroundColor: 'green',
-    width: `${progress}%`,
-  }
   return (
-    <Card padding={2}>
-      <Heading>{title}</Heading>
-      <Flex align="center">
-        <Box flex={1}>
-          <Inline>
-            <Box style={progressWrapperStyle}>
-              <Box style={progressStyle}>&nbsp;</Box>
-            </Box>
-            <Box paddingLeft={3}>
-              <Text>{progress} %</Text>
-            </Box>
-          </Inline>
+    <Card shadow={1}>
+      <Grid columns={5} gap={3} padding={3}>
+        <Flex columnStart={1} columnEnd={3} align="center">
+          <Text weight="bold" size={1}>
+            {title}
+          </Text>
+        </Flex>
+        {progress && (
+          <Flex columnStart={3} columnEnd={5} align="center">
+            <ProgressBar progress={progress} />
+          </Flex>
+        )}
+        <Box columnStart={5} columnEnd={6}>
+          <Button
+            style={{ width: `100%` }}
+            mode="ghost"
+            onClick={() => importFile()}
+            text="Import"
+            tone="positive"
+            icon={DownloadIcon}
+          />
         </Box>
-        <Button
-          mode="bleed"
-          onClick={() => importFile()}
-          text="Import"
-          tone="positive"
-        />
-      </Flex>
+      </Grid>
     </Card>
   )
 }

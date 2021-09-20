@@ -3,3 +3,5 @@ declare module 'part:@sanity/base/client' {
   const shim: SanityClient
   export default shim
 }
+
+declare module '@sanity/util/content'

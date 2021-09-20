@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
+import { Box, Stack, Text, useToast } from '@sanity/ui'
+
 import { TranslationContext } from './TranslationContext'
 import { TranslationLocale, TranslationTask } from '../types'
 import { LanguageStatus } from './LanguageStatus'
-import { Stack, Card, useToast } from '@sanity/ui'
 
 type JobProps = {
   task: TranslationTask
@@ -32,8 +33,11 @@ export const TaskView = ({ task, locales }: JobProps) => {
   }
 
   return (
-    <Card padding={2} sizing="border">
-      <Stack space={2}>
+    <Stack space={3}>
+      <Text weight="semibold" size={1}>
+        Current job progress
+      </Text>
+      <Box>
         {task.locales.map(localeTask => {
           const reportPercent = localeTask.progress || 0
           const locale = locales.find(l => l.localeId === localeTask.localeId)
@@ -49,19 +53,7 @@ export const TaskView = ({ task, locales }: JobProps) => {
             />
           )
         })}
-      </Stack>
-    </Card>
+      </Box>
+    </Stack>
   )
 }
-/*
-
-    <Skeleton isLoaded={!!details}>
-      <Box p={2} shadow="md" borderWidth="1px">
-        <Box>
-          <Grid>
-            <Text fontSize="xs">Overall progress</Text>
-          </Grid>
-        </Box>
-      </Box>
-    </Skeleton>
-*/

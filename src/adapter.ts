@@ -72,6 +72,7 @@ export const DummyAdapter: Adapter = {
   },
   getTranslation: async (taskId: string, localeId: string) => {
     console.debug('Fetching translation for locale', localeId)
+    await setTimeout(() => {}, 1000)
     const task = getTaskDetails(taskId)
     if (!task) {
       return null
