@@ -43,16 +43,23 @@
   "size-limit": [
     {
       "path": "dist/sanity-translations-tab.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "30 KB",
+      "ignore": [
+        "part:@sanity/base/client"
+      ]
     },
     {
       "path": "dist/sanity-translations-tab.esm.js",
-      "limit": "10 KB"
+      "limit": "10 KB",
+      "ignore": [
+        "part:@sanity/base/client"
+      ]
     }
   ],
   "devDependencies": {
     "@sanity/client": "^2.11.0",
     "@sanity/ui": "^0.36.8",
+    "@sanity/util": "^2.19.0",
     "@size-limit/preset-small-lib": "^4.7.0",
     "@types/react": "^16.9.56",
     "framer-motion": "^2.9.4",
