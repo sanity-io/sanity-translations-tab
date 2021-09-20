@@ -1,5 +1,5 @@
 {
-  "version": "1.1.4",
+  "version": "1.1.41",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -21,7 +21,7 @@
     "analyze": "size-limit --why"
   },
   "peerDependencies": {
-    "@sanity/ui": "^0.32 || ^0.33",
+    "@sanity/ui": "^0.36.8",
     "react": "^16 || ^17",
     "react-dom": "^16 || ^17",
     "styled-components": "^5"
