@@ -25,7 +25,7 @@ const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
       style={{ cursor: `pointer` }}
       radius={2}
     >
-      <Flex align="center">
+      <Flex align="center" gap={3}>
         <Switch
           style={{ pointerEvents: `none` }}
           disabled={locale.enabled === false}
@@ -84,7 +84,7 @@ export const NewTask = ({ locales }: Props) => {
 
   return (
     <Stack space={3}>
-      <Flex align="center" gap={3}>
+      <Flex align="center">
         <Text weight="semibold" size={1}>
           Select locales
         </Text>
