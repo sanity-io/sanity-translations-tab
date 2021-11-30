@@ -14,7 +14,7 @@ import S from '@sanity/desk-tool/structure-builder'
 import {
   TranslationsTab,
   DummyAdapter,
-} from '../../plugins/sanity-translations-tab/dist'
+} from '../../plugins/sanity-translations-tab/src'
 
 export const getDefaultDocumentNode = ({ schemaType }) => {
   if (schemaType === 'translatable') {
