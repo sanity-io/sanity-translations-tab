@@ -37,7 +37,11 @@ type TranslationTabProps = {
 
 const TranslationTab = (props: TranslationTabProps) => {
   const { displayed } = props.document
-  const documentId = displayed._id.split('drafts.').pop() as string
+
+  const documentId =
+    displayed && displayed._id
+      ? (displayed._id.split('drafts.').pop() as string)
+      : ''
 
   const { errors, importTranslation, exportForTranslation } = useMemo(() => {
     let allErrors = []
