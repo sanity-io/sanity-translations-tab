@@ -30,6 +30,8 @@ const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
           style={{ pointerEvents: `none` }}
           disabled={locale.enabled === false}
           checked={checked}
+          //not needed because of above toggle logic, but silence React warnings.
+          onChange={() => {}}
         />
         <Box>
           <Text size={1} weight="semibold">
