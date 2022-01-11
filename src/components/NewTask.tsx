@@ -82,7 +82,7 @@ export const NewTask = ({ locales }: Props) => {
       })
   }
 
-  const possibleLocales = 'locales'.filter(locale => locale.enabled !== false)
+  const possibleLocales = locales.filter(locale => locale.enabled !== false)
 
   return (
     <Stack space={3}>
