@@ -23,11 +23,11 @@ export const LanguageStatus = ({
             {title}
           </Text>
         </Flex>
-        {progress && (
+        {progress && progress > 0 ? (
           <Flex columnStart={3} columnEnd={5} align="center">
             <ProgressBar progress={progress} />
           </Flex>
-        )}
+        ) : null}
         <Box columnStart={5} columnEnd={6}>
           <Button
             style={{ width: `100%` }}
@@ -36,6 +36,7 @@ export const LanguageStatus = ({
             text="Import"
             tone="positive"
             icon={DownloadIcon}
+            whiteSpace="nowrap"
           />
         </Box>
       </Grid>

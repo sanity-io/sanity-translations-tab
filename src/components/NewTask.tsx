@@ -86,13 +86,12 @@ export const NewTask = ({ locales }: Props) => {
 
   return (
     <Stack space={3}>
-      <Flex align="center">
+      <Flex align="center" justify="between">
         <Text weight="semibold" size={1}>
-          Select locales
+          {possibleLocales.length === 1 ? `Select locale` : `Select locales`}
         </Text>
 
         <Button
-          style={{ marginLeft: `auto` }}
           fontSize={1}
           padding={2}
           text="Toggle All"
