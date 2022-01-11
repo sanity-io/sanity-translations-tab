@@ -9,7 +9,7 @@ export default function ProgressBar({ progress }: ProgressBarProps) {
   if (!progress) {
     return null
   }
-  
+
   return (
     <Card border radius={2} style={{ width: `100%`, position: `relative` }}>
       <Flex

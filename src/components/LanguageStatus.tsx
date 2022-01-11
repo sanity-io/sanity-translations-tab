@@ -36,7 +36,6 @@ export const LanguageStatus = ({
             text="Import"
             tone="positive"
             icon={DownloadIcon}
-            whiteSpace="nowrap"
           />
         </Box>
       </Grid>

@@ -82,11 +82,11 @@ export const NewTask = ({ locales }: Props) => {
       })
   }
 
-  const possibleLocales = locales.filter(locale => locale.enabled !== false)
+  const possibleLocales = 'locales'.filter(locale => locale.enabled !== false)
 
   return (
     <Stack space={3}>
-      <Flex align="center" justify="between">
+      <Flex align="center" justify="space-between">
         <Text weight="semibold" size={1}>
           {possibleLocales.length === 1 ? `Select locale` : `Select locales`}
         </Text>
