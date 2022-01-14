@@ -1,7 +1,9 @@
 import React, { useState, useContext } from 'react'
+import styled from 'styled-components'
+import { Box, Grid, Flex, Stack, Text, Button, Switch } from '@sanity/ui'
+
 import { TranslationContext } from './TranslationContext'
 import { TranslationLocale } from '../types'
-import { Box, Grid, Flex, Stack, Text, Button, Switch } from '@sanity/ui'
 
 type Props = {
   locales: TranslationLocale[]
@@ -12,6 +14,10 @@ type LocaleCheckboxProps = {
   toggle: (locale: string, checked: boolean) => void
   checked: boolean
 }
+
+const WrapText = styled(Box)`
+  white-space: normal;
+`
 
 const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
   return (
@@ -33,11 +39,11 @@ const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
           //not needed because of above toggle logic, but silence React warnings.
           onChange={() => {}}
         />
-        <Box>
+        <WrapText>
           <Text size={1} weight="semibold">
             {locale.description}
           </Text>
-        </Box>
+        </WrapText>
       </Flex>
     </Button>
   )
