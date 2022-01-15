@@ -32,7 +32,8 @@ export interface Adapter {
     documentId: string,
     document: Record<string, any>,
     localeIds: string[],
-    secrets: Secrets | null
+    secrets: Secrets | null,
+    isWorkflowMT: boolean
   ) => Promise<TranslationTask>
   getTranslation: (
     taskid: string,

@@ -1,6 +1,15 @@
 import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
-import { Box, Grid, Flex, Stack, Text, Button, Switch } from '@sanity/ui'
+import {
+  Box,
+  Checkbox,
+  Grid,
+  Flex,
+  Stack,
+  Text,
+  Button,
+  Switch,
+} from '@sanity/ui'
 
 import { TranslationContext } from './TranslationContext'
 import { TranslationLocale } from '../types'
@@ -23,7 +32,6 @@ const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
   return (
     <Button
       mode="ghost"
-      tone="positive"
       onClick={() => {
         toggle(locale.localeId, !checked)
       }}
@@ -40,9 +48,7 @@ const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
           onChange={() => {}}
         />
         <WrapText>
-          <Text size={1} weight="semibold">
-            {locale.description}
-          </Text>
+          <Text size={1}>{locale.description}</Text>
         </WrapText>
       </Flex>
     </Button>
@@ -55,6 +61,7 @@ export const NewTask = ({ locales }: Props) => {
   const [selectedLocales, setSelectedLocales] = React.useState<
     React.ReactText[]
   >([])
+  const [isWorkflowMT, setIsWorkflowMT] = React.useState(false)
   const [isBusy, setIsBusy] = useState(false)
 
   const context = useContext(TranslationContext)
@@ -80,7 +87,8 @@ export const NewTask = ({ locales }: Props) => {
           context.documentId,
           serialized,
           selectedLocales as string[],
-          context.secrets
+          context.secrets,
+          isWorkflowMT
         )
       })
       .then(() => {
@@ -124,6 +132,21 @@ export const NewTask = ({ locales }: Props) => {
           />
         ))}
       </Grid>
+
+      <Flex align="flex-start">
+        <Checkbox
+          id="mt-checkbox"
+          checked={isWorkflowMT}
+          onChange={() => setIsWorkflowMT(!isWorkflowMT)}
+        />
+        <Box flex={1} paddingLeft={3}>
+          <Text>
+            <label htmlFor="mt-checkbox">
+              Use Machine Translation workflow for testing
+            </label>
+          </Text>
+        </Box>
+      </Flex>
 
       <Button
         onClick={createTask}
