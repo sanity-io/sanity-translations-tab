@@ -1,14 +1,14 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, ChangeEvent } from 'react'
 import styled from 'styled-components'
 import {
   Box,
-  Checkbox,
   Grid,
   Flex,
   Stack,
   Text,
   Button,
   Switch,
+  Select,
 } from '@sanity/ui'
 
 import { TranslationContext } from './TranslationContext'
@@ -61,7 +61,7 @@ export const NewTask = ({ locales }: Props) => {
   const [selectedLocales, setSelectedLocales] = React.useState<
     React.ReactText[]
   >([])
-  const [isWorkflowMT, setIsWorkflowMT] = React.useState(false)
+  const [selectedWorkflowUid, setSelectedWorkflowUid] = React.useState<string>()
   const [isBusy, setIsBusy] = useState(false)
 
   const context = useContext(TranslationContext)
@@ -88,7 +88,7 @@ export const NewTask = ({ locales }: Props) => {
           serialized,
           selectedLocales as string[],
           context.secrets,
-          isWorkflowMT
+          selectedWorkflowUid
         )
       })
       .then(() => {
@@ -122,6 +122,7 @@ export const NewTask = ({ locales }: Props) => {
           }
         />
       </Flex>
+
       <Grid columns={[1, 1, 2, 3]} gap={1}>
         {(locales || []).map(l => (
           <LocaleCheckbox
@@ -133,20 +134,29 @@ export const NewTask = ({ locales }: Props) => {
         ))}
       </Grid>
 
-      <Flex align="flex-start">
-        <Checkbox
-          id="mt-checkbox"
-          checked={isWorkflowMT}
-          onChange={() => setIsWorkflowMT(!isWorkflowMT)}
-        />
-        <Box flex={1} paddingLeft={3}>
-          <Text>
-            <label htmlFor="mt-checkbox">
-              Use Machine Translation workflow for testing
-            </label>
+      {context?.workflowOptions && context.workflowOptions.length > 0 && (
+        <>
+          <Text weight="semibold" size={1} as="label" htmlFor="workflow-select">
+            Select translation workflow
           </Text>
-        </Box>
-      </Flex>
+          <Select
+            id="workflowSelect"
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+              setSelectedWorkflowUid(e.target.value)
+            }}
+          >
+            <option>Default locale workflows</option>
+            {context.workflowOptions.map(w => (
+              <option
+                key={`workflow-opt-${w.workflowUid}`}
+                value={w.workflowUid}
+              >
+                {w.workflowName}
+              </option>
+            ))}
+          </Select>
+        </>
+      )}
 
       <Button
         onClick={createTask}

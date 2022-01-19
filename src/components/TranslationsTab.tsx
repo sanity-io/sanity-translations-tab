@@ -16,7 +16,7 @@ import {
 import { TranslationContext } from './TranslationContext'
 import { TranslationView } from './TranslationView'
 import { useSecrets } from '../hooks/useSecrets'
-import { Adapter, Secrets } from '../types'
+import { Adapter, Secrets, WorkflowIdentifiers } from '../types'
 
 type TranslationTabProps = {
   document: {
@@ -32,6 +32,7 @@ type TranslationTabProps = {
       localeId: string,
       doc: Record<string, any>
     ) => Promise<void>
+    workflowOptions?: WorkflowIdentifiers[]
   }
 }
 
@@ -140,6 +141,7 @@ const TranslationTab = (props: TranslationTabProps) => {
                     exportForTranslation,
                     adapter: props.options.adapter,
                     baseLanguage: props.options.baseLanguage,
+                    workflowOptions: props.options.workflowOptions,
                   }}
                 >
                   <TranslationView />

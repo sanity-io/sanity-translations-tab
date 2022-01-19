@@ -1,5 +1,5 @@
 import React from 'react'
-import { Adapter, Secrets } from '../types'
+import { Adapter, Secrets, WorkflowIdentifiers } from '../types'
 
 export type ContextProps = {
   documentId: string
@@ -11,6 +11,7 @@ export type ContextProps = {
   exportForTranslation: (documentId: string) => Promise<Record<string, any>>
   baseLanguage: string
   secrets: Secrets
+  workflowOptions?: WorkflowIdentifiers[]
 }
 
 export const TranslationContext = React.createContext<ContextProps | null>(null)
