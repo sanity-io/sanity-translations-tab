@@ -22,13 +22,22 @@ export const TaskView = ({ task, locales }: JobProps) => {
 
     context.adapter
       .getTranslation(task.taskId, localeId, context.secrets)
-      .then(record => {
+      .then((record): boolean => {
         if (record) {
           context.importTranslation(localeId, record)
+          return true
         } else {
           // TODO: Handle this in a toast
           alert('Error getting the translated content!')
+          return false
         }
+      })
+      .then(success => {
+        toast.push(
+          success
+            ? { title: 'Success', status: 'success', closable: true }
+            : { title: 'Failure', status: 'error' }
+        )
       })
   }
 
@@ -41,12 +50,12 @@ export const TaskView = ({ task, locales }: JobProps) => {
         {task.locales.map(localeTask => {
           const reportPercent = localeTask.progress || 0
           const locale = locales.find(l => l.localeId === localeTask.localeId)
+          console.log(localeTask)
           return (
             <LanguageStatus
               key={[task.taskId, localeTask.localeId].join('.')}
               importFile={() => {
                 importFile(localeTask.localeId)
-                toast.push({ title: 'Hello', status: 'info' })
               }}
               title={locale?.description || localeTask.localeId}
               progress={reportPercent}

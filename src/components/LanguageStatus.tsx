@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Flex, Card, Text, Grid, Box, Button } from '@sanity/ui'
 import { DownloadIcon } from '@sanity/icons'
 import ProgressBar from './ProgressBar'
@@ -6,7 +6,6 @@ import ProgressBar from './ProgressBar'
 type LanguageStatusProps = {
   title: string
   progress: number
-
   importFile: Function
 }
 
@@ -15,6 +14,13 @@ export const LanguageStatus = ({
   progress,
   importFile,
 }: LanguageStatusProps) => {
+  const [isBusy, setIsBusy] = useState(false)
+
+  const handleImport = () => {
+    setIsBusy(true)
+    importFile()
+  }
+
   return (
     <Card shadow={1}>
       <Grid columns={5} gap={3} padding={3}>
@@ -32,10 +38,10 @@ export const LanguageStatus = ({
           <Button
             style={{ width: `100%` }}
             mode="ghost"
-            onClick={() => importFile()}
+            onClick={handleImport}
             text="Import"
-            tone="positive"
             icon={DownloadIcon}
+            disabled={isBusy}
           />
         </Box>
       </Grid>

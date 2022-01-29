@@ -1,3 +1,8 @@
+/**
+ * TODO!
+ * Add cleanup function to cancel async tasks
+ */
+
 import React, { useContext, useEffect, useState } from 'react'
 import { Stack } from '@sanity/ui'
 import { TranslationContext } from './TranslationContext'
