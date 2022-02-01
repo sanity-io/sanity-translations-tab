@@ -33,6 +33,9 @@ export const TaskView = ({ task, locales }: JobProps) => {
 
     const locale = getLocale(localeId, locales)
     const localeTitle = locale?.description || localeId
+    const sanityId = context.localeIdAdapter
+      ? context.localeIdAdapter(localeId)
+      : localeId
 
     try {
       const translation = await context.adapter.getTranslation(
@@ -42,7 +45,7 @@ export const TaskView = ({ task, locales }: JobProps) => {
       )
       console.log('here 1', translation)
       const successfulImport = await context.importTranslation(
-        localeId,
+        sanityId,
         translation
       )
       console.log('here 2', successfulImport)
