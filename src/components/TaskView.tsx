@@ -10,35 +10,82 @@ type JobProps = {
   locales: TranslationLocale[]
 }
 
+const getLocale = (
+  localeId: string,
+  locales: TranslationLocale[]
+): TranslationLocale | undefined => locales.find(l => l.localeId === localeId)
+
 export const TaskView = ({ task, locales }: JobProps) => {
   const context = useContext(TranslationContext)
   const toast = useToast()
 
-  const importFile = (localeId: string) => {
+  const importFile = async (localeId: string) => {
     if (!context) {
       console.error('Missing context')
+      toast.push({
+        title:
+          'Missing context, unable to import translation. Try refreshing or clicking away from this tab and back.',
+        status: 'error',
+        closable: true,
+      })
       return
     }
 
-    context.adapter
-      .getTranslation(task.taskId, localeId, context.secrets)
-      .then((record): boolean => {
-        if (record) {
-          context.importTranslation(localeId, record)
-          return true
-        } else {
-          // TODO: Handle this in a toast
-          alert('Error getting the translated content!')
-          return false
-        }
+    const locale = getLocale(localeId, locales)
+    const localeTitle = locale?.description || localeId
+
+    try {
+      const translation = await context.adapter.getTranslation(
+        task.taskId,
+        localeId,
+        context.secrets
+      )
+      console.log('here 1', translation)
+      const successfulImport = await context.importTranslation(
+        localeId,
+        translation
+      )
+      console.log('here 2', successfulImport)
+      toast.push({
+        title: `Imported ${localeTitle} translation`,
+        status: 'success',
+        closable: true,
       })
-      .then(success => {
-        toast.push(
-          success
-            ? { title: 'Success', status: 'success', closable: true }
-            : { title: 'Failure', status: 'error' }
-        )
+    } catch (error) {
+      console.error('Error made it to TaskView:')
+      console.log(error && error.message)
+      toast.push({
+        title: `Error getting ${localeTitle} translation`,
+        status: 'error',
+        closable: true,
       })
+    }
+
+    // context.adapter
+    //   .getTranslation(task.taskId, localeId, context.secrets)
+    //   .then((record): boolean => {
+    //     if (record) {
+    //       context.importTranslation(localeId, record)
+    //       return true
+    //     } else {
+    //       // TODO: Handle this in a toast
+    //       alert('Error getting the translated content!')
+    //       return false
+    //     }
+    //   })
+    //   .then(success => {
+    //     toast.push(
+    //       success
+    //         ? { title: 'Success', status: 'success', closable: true }
+    //         : { title: 'Failure', status: 'error' }
+    //     )
+    //   })
+    //   .catch(() => {
+    //     toast.push({
+    //       title: 'Error getting the translated content!',
+    //       status: 'error',
+    //     })
+    //   })
   }
 
   return (
@@ -49,8 +96,7 @@ export const TaskView = ({ task, locales }: JobProps) => {
       <Box>
         {task.locales.map(localeTask => {
           const reportPercent = localeTask.progress || 0
-          const locale = locales.find(l => l.localeId === localeTask.localeId)
-          console.log(localeTask)
+          const locale = getLocale(localeTask.localeId, locales)
           return (
             <LanguageStatus
               key={[task.taskId, localeTask.localeId].join('.')}
