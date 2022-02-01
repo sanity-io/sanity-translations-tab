@@ -38,7 +38,10 @@
     "trailingComma": "es5"
   },
   "name": "sanity-translations-tab",
-  "author": "Sanity.io/All Turtles",
+  "author": "Sanity.io",
+  "contributors": [
+    "annie@all-turtles.com"
+  ],
   "module": "dist/sanity-translations-tab.esm.js",
   "size-limit": [
     {
