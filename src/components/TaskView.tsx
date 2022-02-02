@@ -43,52 +43,29 @@ export const TaskView = ({ task, locales }: JobProps) => {
         localeId,
         context.secrets
       )
-      console.log('here 1', translation)
-      const successfulImport = await context.importTranslation(
-        sanityId,
-        translation
-      )
-      console.log('here 2', successfulImport)
+
+      await context.importTranslation(sanityId, translation)
+
       toast.push({
         title: `Imported ${localeTitle} translation`,
         status: 'success',
         closable: true,
       })
-    } catch (error) {
-      console.error('Error made it to TaskView:')
-      console.log(error && error.message)
+    } catch (err) {
+      let errorMsg
+      if (err instanceof Error) {
+        errorMsg = err.message
+      } else {
+        errorMsg = err ? String(err) : null
+      }
+
       toast.push({
         title: `Error getting ${localeTitle} translation`,
+        description: errorMsg,
         status: 'error',
         closable: true,
       })
     }
-
-    // context.adapter
-    //   .getTranslation(task.taskId, localeId, context.secrets)
-    //   .then((record): boolean => {
-    //     if (record) {
-    //       context.importTranslation(localeId, record)
-    //       return true
-    //     } else {
-    //       // TODO: Handle this in a toast
-    //       alert('Error getting the translated content!')
-    //       return false
-    //     }
-    //   })
-    //   .then(success => {
-    //     toast.push(
-    //       success
-    //         ? { title: 'Success', status: 'success', closable: true }
-    //         : { title: 'Failure', status: 'error' }
-    //     )
-    //   })
-    //   .catch(() => {
-    //     toast.push({
-    //       title: 'Error getting the translated content!',
-    //       status: 'error',
-    //     })
-    //   })
   }
 
   return (
