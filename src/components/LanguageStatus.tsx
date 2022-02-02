@@ -6,7 +6,7 @@ import ProgressBar from './ProgressBar'
 type LanguageStatusProps = {
   title: string
   progress: number
-  importFile: Function
+  importFile: () => Promise<void>
 }
 
 export const LanguageStatus = ({
@@ -16,9 +16,10 @@ export const LanguageStatus = ({
 }: LanguageStatusProps) => {
   const [isBusy, setIsBusy] = useState(false)
 
-  const handleImport = () => {
+  const handleImport = async () => {
     setIsBusy(true)
-    importFile()
+    await importFile()
+    setIsBusy(false)
   }
 
   return (
@@ -39,9 +40,9 @@ export const LanguageStatus = ({
             style={{ width: `100%` }}
             mode="ghost"
             onClick={handleImport}
-            text="Import"
-            icon={DownloadIcon}
-            disabled={isBusy}
+            text={isBusy ? 'Importing...' : 'Import'}
+            icon={isBusy ? null : DownloadIcon}
+            disabled={isBusy || !progress || progress < 1}
           />
         </Box>
       </Grid>

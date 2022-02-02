@@ -21,7 +21,6 @@ export const TaskView = ({ task, locales }: JobProps) => {
 
   const importFile = async (localeId: string) => {
     if (!context) {
-      console.error('Missing context')
       toast.push({
         title:
           'Missing context, unable to import translation. Try refreshing or clicking away from this tab and back.',
@@ -43,7 +42,6 @@ export const TaskView = ({ task, locales }: JobProps) => {
         localeId,
         context.secrets
       )
-
       await context.importTranslation(sanityId, translation)
 
       toast.push({
@@ -80,8 +78,8 @@ export const TaskView = ({ task, locales }: JobProps) => {
           return (
             <LanguageStatus
               key={[task.taskId, localeTask.localeId].join('.')}
-              importFile={() => {
-                importFile(localeTask.localeId)
+              importFile={async () => {
+                await importFile(localeTask.localeId)
               }}
               title={locale?.description || localeTask.localeId}
               progress={reportPercent}
