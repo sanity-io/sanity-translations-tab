@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Box, Heading, Stack, useToast } from '@sanity/ui'
+import { Box, Text, Stack, useToast } from '@sanity/ui'
 
 import { TranslationContext } from './TranslationContext'
 import { TranslationLocale, TranslationTask } from '../types'
