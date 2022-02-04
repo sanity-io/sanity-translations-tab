@@ -102,7 +102,7 @@ export const NewTask = ({ locales }: Props) => {
     <Stack paddingTop={4} space={4}>
       <Heading as="h2" weight="semibold" size={2}>
         Create New Translation Job
-      </Heading>
+      </Text>
       <Stack space={3}>
         <Flex align="center" justify="space-between">
           <Text weight="semibold" size={1}>
