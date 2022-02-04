@@ -5,7 +5,6 @@ import {
   Box,
   Flex,
   Grid,
-  Heading,
   Select,
   Stack,
   Switch,
