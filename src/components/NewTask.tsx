@@ -48,7 +48,9 @@ const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
           onChange={() => {}}
         />
         <WrapText>
- <Text size={1} weight="semibold">{locale.description}</Text>
+          <Text size={1} weight="semibold">
+            {locale.description}
+          </Text>
         </WrapText>
       </Flex>
     </Button>
