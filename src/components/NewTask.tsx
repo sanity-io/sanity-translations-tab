@@ -48,7 +48,7 @@ const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
           onChange={() => {}}
         />
         <WrapText>
-          <Text size={1}>{locale.description}</Text>
+ <Text size={1} weight="semibold">{locale.description}</Text>
         </WrapText>
       </Flex>
     </Button>
@@ -100,7 +100,7 @@ export const NewTask = ({ locales }: Props) => {
 
   return (
     <Stack paddingTop={4} space={4}>
-      <Heading as="h2" weight="semibold" size={2}>
+      <Text as="h2" weight="semibold" size={2}>
         Create New Translation Job
       </Text>
       <Stack space={3}>
