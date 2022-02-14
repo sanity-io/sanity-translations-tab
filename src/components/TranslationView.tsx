@@ -33,7 +33,7 @@ export const TranslationView = () => {
   }, [context])
 
   return (
-    <Stack space={5}>
+    <Stack space={6}>
       <NewTask locales={locales} />
       {task && <TaskView task={task} locales={locales} />}
     </Stack>

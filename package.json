@@ -1,5 +1,5 @@
 {
-  "version": "1.1.44",
+  "version": "1.2.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -24,7 +24,7 @@
     "@sanity/ui": "^0.36.8",
     "react": "^16 || ^17",
     "react-dom": "^16 || ^17",
-    "styled-components": "^5"
+    "styled-components": "^5.3.3"
   },
   "husky": {
     "hooks": {
@@ -39,6 +39,9 @@
   },
   "name": "sanity-translations-tab",
   "author": "Sanity.io",
+  "contributors": [
+    "annie@all-turtles.com"
+  ],
   "module": "dist/sanity-translations-tab.esm.js",
   "size-limit": [
     {
@@ -62,6 +65,7 @@
     "@sanity/util": "^2.19.0",
     "@size-limit/preset-small-lib": "^4.7.0",
     "@types/react": "^16.9.56",
+    "@types/styled-components": "^5.1.20",
     "husky": "^4.3.0",
     "size-limit": "^4.7.0",
     "styled-components": "^5.2.1",
