@@ -10,26 +10,60 @@ type JobProps = {
   locales: TranslationLocale[]
 }
 
+const getLocale = (
+  localeId: string,
+  locales: TranslationLocale[]
+): TranslationLocale | undefined => locales.find(l => l.localeId === localeId)
+
 export const TaskView = ({ task, locales }: JobProps) => {
   const context = useContext(TranslationContext)
   const toast = useToast()
 
-  const importFile = (localeId: string) => {
+  const importFile = async (localeId: string) => {
     if (!context) {
-      console.error('Missing context')
+      toast.push({
+        title:
+          'Missing context, unable to import translation. Try refreshing or clicking away from this tab and back.',
+        status: 'error',
+        closable: true,
+      })
       return
     }
 
-    context.adapter
-      .getTranslation(task.taskId, localeId, context.secrets)
-      .then(record => {
-        if (record) {
-          context.importTranslation(localeId, record)
-        } else {
-          // TODO: Handle this in a toast
-          alert('Error getting the translated content!')
-        }
+    const locale = getLocale(localeId, locales)
+    const localeTitle = locale?.description || localeId
+    const sanityId = context.localeIdAdapter
+      ? context.localeIdAdapter(localeId)
+      : localeId
+
+    try {
+      const translation = await context.adapter.getTranslation(
+        task.taskId,
+        localeId,
+        context.secrets
+      )
+      await context.importTranslation(sanityId, translation)
+
+      toast.push({
+        title: `Imported ${localeTitle} translation`,
+        status: 'success',
+        closable: true,
       })
+    } catch (err) {
+      let errorMsg
+      if (err instanceof Error) {
+        errorMsg = err.message
+      } else {
+        errorMsg = err ? String(err) : null
+      }
+
+      toast.push({
+        title: `Error getting ${localeTitle} translation`,
+        description: errorMsg,
+        status: 'error',
+        closable: true,
+      })
+    }
   }
 
   return (
@@ -40,13 +74,12 @@ export const TaskView = ({ task, locales }: JobProps) => {
       <Box>
         {task.locales.map(localeTask => {
           const reportPercent = localeTask.progress || 0
-          const locale = locales.find(l => l.localeId === localeTask.localeId)
+          const locale = getLocale(localeTask.localeId, locales)
           return (
             <LanguageStatus
               key={[task.taskId, localeTask.localeId].join('.')}
-              importFile={() => {
-                importFile(localeTask.localeId)
-                toast.push({ title: 'Hello', status: 'info' })
+              importFile={async () => {
+                await importFile(localeTask.localeId)
               }}
               title={locale?.description || localeTask.localeId}
               progress={reportPercent}
