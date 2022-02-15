@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Box, Heading, Stack, useToast } from '@sanity/ui'
+import { Box, Text, Stack, useToast } from '@sanity/ui'
 
 import { TranslationContext } from './TranslationContext'
 import { TranslationLocale, TranslationTask } from '../types'
@@ -68,9 +68,9 @@ export const TaskView = ({ task, locales }: JobProps) => {
 
   return (
     <Stack space={4}>
-      <Heading as="h2" weight="semibold" size={2}>
+      <Text as="h2" weight="semibold" size={2}>
         Current Job Progress
-      </Heading>
+      </Text>
       <Box>
         {task.locales.map(localeTask => {
           const reportPercent = localeTask.progress || 0
