@@ -9,6 +9,7 @@ import {
   Stack,
   Switch,
   Text,
+  useToast,
 } from '@sanity/ui'
 
 import { TranslationContext } from './TranslationContext'
@@ -16,6 +17,7 @@ import { TranslationLocale } from '../types'
 
 type Props = {
   locales: TranslationLocale[]
+  refreshTask: () => Promise<void>
 }
 
 type LocaleCheckboxProps = {
@@ -57,16 +59,15 @@ const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
   )
 }
 
-export const NewTask = ({ locales }: Props) => {
+export const NewTask = ({ locales, refreshTask }: Props) => {
   // Lets just stick to the canonical document id for keeping track of
   // translations
-  const [selectedLocales, setSelectedLocales] = React.useState<
-    React.ReactText[]
-  >([])
-  const [selectedWorkflowUid, setSelectedWorkflowUid] = React.useState<string>()
+  const [selectedLocales, setSelectedLocales] = useState<React.ReactText[]>([])
+  const [selectedWorkflowUid, setSelectedWorkflowUid] = useState<string>()
   const [isBusy, setIsBusy] = useState(false)
 
   const context = useContext(TranslationContext)
+  const toast = useToast()
 
   const toggleLocale = (locale: string, selected: boolean) => {
     if (!selected) {
@@ -78,23 +79,56 @@ export const NewTask = ({ locales }: Props) => {
 
   const createTask = async () => {
     if (!context) {
-      console.error('Missing context')
+      toast.push({
+        title: 'Unable to create task: missing context',
+        status: 'error',
+        closable: true,
+      })
       return
     }
+
     setIsBusy(true)
+
     context
       .exportForTranslation(context.documentId)
-      .then(serialized => {
-        return context.adapter.createTask(
+      .then(serialized =>
+        context.adapter.createTask(
           context.documentId,
           serialized,
           selectedLocales as string[],
           context.secrets,
           selectedWorkflowUid
         )
-      })
+      )
       .then(() => {
+        toast.push({
+          title: 'Job successfully created',
+          status: 'success',
+          closable: true,
+        })
+
+        /** Reset form fields */
+        setSelectedLocales([])
+        setSelectedWorkflowUid('')
         setIsBusy(false)
+
+        /** Update task data in TranslationView */
+        refreshTask()
+      })
+      .catch(err => {
+        let errorMsg
+        if (err instanceof Error) {
+          errorMsg = err.message
+        } else {
+          errorMsg = err ? String(err) : null
+        }
+
+        toast.push({
+          title: `Error creating translation job`,
+          description: errorMsg,
+          status: 'error',
+          closable: true,
+        })
       })
   }
 
@@ -171,7 +205,7 @@ export const NewTask = ({ locales }: Props) => {
         onClick={createTask}
         disabled={isBusy || !selectedLocales.length}
         tone="positive"
-        text="Create Job"
+        text={isBusy ? 'Creating Job...' : 'Create Job'}
       />
     </Stack>
   )

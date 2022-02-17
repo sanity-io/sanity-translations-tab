@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { Box, Text, Stack, useToast } from '@sanity/ui'
+import React, { useContext, useState } from 'react'
+import { Box, Button, Flex, Text, Stack, useToast } from '@sanity/ui'
 
 import { TranslationContext } from './TranslationContext'
 import { TranslationLocale, TranslationTask } from '../types'
@@ -8,6 +8,7 @@ import { LanguageStatus } from './LanguageStatus'
 type JobProps = {
   task: TranslationTask
   locales: TranslationLocale[]
+  refreshTask: () => Promise<void>
 }
 
 const getLocale = (
@@ -15,9 +16,11 @@ const getLocale = (
   locales: TranslationLocale[]
 ): TranslationLocale | undefined => locales.find(l => l.localeId === localeId)
 
-export const TaskView = ({ task, locales }: JobProps) => {
+export const TaskView = ({ task, locales, refreshTask }: JobProps) => {
   const context = useContext(TranslationContext)
   const toast = useToast()
+
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const importFile = async (localeId: string) => {
     if (!context) {
@@ -66,11 +69,28 @@ export const TaskView = ({ task, locales }: JobProps) => {
     }
   }
 
+  const handleRefreshClick = async () => {
+    setIsRefreshing(true)
+    await refreshTask()
+    setIsRefreshing(false)
+  }
+
   return (
     <Stack space={4}>
-      <Text as="h2" weight="semibold" size={2}>
-        Current Job Progress
-      </Text>
+      <Flex align="center" justify="space-between">
+        <Text as="h2" weight="semibold" size={2}>
+          Current Job Progress
+        </Text>
+
+        <Button
+          fontSize={1}
+          padding={2}
+          text={isRefreshing ? 'Refreshing' : 'Refresh Status'}
+          onClick={handleRefreshClick}
+          disabled={isRefreshing}
+        />
+      </Flex>
+
       <Box>
         {task.locales.map(localeTask => {
           const reportPercent = localeTask.progress || 0
