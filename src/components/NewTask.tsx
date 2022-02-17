@@ -110,7 +110,6 @@ export const NewTask = ({ locales, refreshTask }: Props) => {
         /** Reset form fields */
         setSelectedLocales([])
         setSelectedWorkflowUid('')
-        setIsBusy(false)
 
         /** Update task data in TranslationView */
         refreshTask()
@@ -129,6 +128,9 @@ export const NewTask = ({ locales, refreshTask }: Props) => {
           status: 'error',
           closable: true,
         })
+      })
+      .finally(() => {
+        setIsBusy(false)
       })
   }
 
