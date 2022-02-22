@@ -33,6 +33,7 @@ type TranslationTabProps = {
       doc: Record<string, any>
     ) => Promise<void>
     workflowOptions?: WorkflowIdentifiers[]
+    localeIdAdapter?: (id: string) => string
   }
 }
 
@@ -116,7 +117,7 @@ const TranslationTab = (props: TranslationTabProps) => {
       <ThemeProvider>
         <Box padding={4}>
           <Layer zOffset={1000}>
-            <ToastProvider>
+            <ToastProvider paddingY={7}>
               {hasErrors && (
                 <Stack space={3}>
                   {errors.map(error => (
@@ -142,6 +143,7 @@ const TranslationTab = (props: TranslationTabProps) => {
                     adapter: props.options.adapter,
                     baseLanguage: props.options.baseLanguage,
                     workflowOptions: props.options.workflowOptions,
+                    localeIdAdapter: props.options.localeIdAdapter,
                   }}
                 >
                   <TranslationView />

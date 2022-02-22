@@ -31,6 +31,26 @@ export const getDefaultDocumentNode = ({ schemaType }) => {
           // These two async functions are expected by the plugin
           exportForTranslation: async props => props,
           importTranslation: async props => props,
+          /**
+           * If the translation vendor has different workflow options,
+           * such as machine translation or human, pass them here and
+           * they'll be displayed as Select menu options in the tab.
+           * If one or more options are included, there will automatically
+           * be a "Default" option that will submit the form with no
+           * additional parameters
+           */
+          workflowOptions: [
+            {
+              workflowUid: '123',
+              workflowName: 'Machine Translation (testing)',
+            },
+          ],
+          /**
+           * Optional function used on translation import to Sanity, if the
+           * locale codes used by the translation vendor don't match Sanity's.
+           * Receives the vendor locale ID and returns the corresponding Sanity id.
+           */
+          localeIdAdapter: translationVendorId => sanityId,
         }),
     ])
   }
