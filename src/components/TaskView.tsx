@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Box, Button, Flex, Text, Stack, useToast } from '@sanity/ui'
+import { ArrowTopRightIcon } from '@sanity/icons'
 
 import { TranslationContext } from './TranslationContext'
 import { TranslationLocale, TranslationTask } from '../types'
@@ -82,13 +83,28 @@ export const TaskView = ({ task, locales, refreshTask }: JobProps) => {
           Current Job Progress
         </Text>
 
-        <Button
-          fontSize={1}
-          padding={2}
-          text={isRefreshing ? 'Refreshing' : 'Refresh Status'}
-          onClick={handleRefreshClick}
-          disabled={isRefreshing}
-        />
+        <Flex gap={3}>
+          {task.linkToVendorTask && (
+            <Button
+              as="a"
+              text="View Job"
+              iconRight={ArrowTopRightIcon}
+              href={task.linkToVendorTask}
+              target="_blank"
+              rel="noreferrer noopener"
+              fontSize={1}
+              padding={2}
+              mode="bleed"
+            />
+          )}
+          <Button
+            fontSize={1}
+            padding={2}
+            text={isRefreshing ? 'Refreshing' : 'Refresh Status'}
+            onClick={handleRefreshClick}
+            disabled={isRefreshing}
+          />
+        </Flex>
       </Flex>
 
       <Box>

@@ -2,6 +2,7 @@ export type TranslationTask = {
   taskId: string
   documentId: string
   locales: TranslationTaskLocaleStatus[]
+  linkToVendorTask?: string
 }
 
 export type TranslationLocale = {
