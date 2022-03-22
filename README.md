@@ -91,5 +91,5 @@ Assuming you already have a studio, the following will get you up and running wi
 5. Run `npm link sanity-translations-tab` inside the directory of the studio you want to use the plugin in (eg, `~/code/my-studio`). This will tell the studio application to use the global symlink to this instance of the dependency.
 6. Add `import { TranslationsTab } from 'sanity-translations-tab'` to `deskStructure.js` in the studio. If previously importing `TranslationsTab` from an adapter library such as `sanity-plugin-smartling-studio`, remove that import statement.
 7. Run `sanity start` to run the studio locally.
-8. Run `npm run watch` from the `sanity-translations-tab` directory to start a watch task.
+8. Run `npm run start` from the `sanity-translations-tab` directory to start a watch task.
 9. Start making changes to the translations tab, as needed, and they should automatically compile in the studio in the browser.
