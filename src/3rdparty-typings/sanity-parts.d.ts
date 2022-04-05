@@ -5,3 +5,8 @@ declare module 'part:@sanity/base/client' {
 }
 
 declare module '@sanity/util/content'
+declare module 'part:@sanity/base/schema' {
+  import { Schema } from '@sanity/schema'
+  const shim: Schema
+  export default shim
+}

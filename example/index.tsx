@@ -17,12 +17,8 @@ const App = () => {
     adapter: DummyAdapter,
     baseLanguage: 'en',
     secretsNamespace: 'translationService',
-    exportForTranslation: () => {},
-    importTranslation: (
-      id: string,
-      localeId: string,
-      doc: Record<string, any>
-    ) => {},
+    exportForTranslation: async props => props,
+    importTranslation: async props => props,
   }
 
   return (

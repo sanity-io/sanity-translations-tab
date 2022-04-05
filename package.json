@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
+  "version": "2.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -13,9 +13,8 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test",
-    "lint": "tsdx lint src test",
-    "lint:fix": "tsdx lint src test --fix",
+    "lint": "tsdx lint src",
+    "lint:fix": "tsdx lint src --fix",
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
@@ -72,5 +71,8 @@
     "tsdx": "^0.14.1",
     "tslib": "^2.0.3",
     "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "sanity-naive-html-serializer": "^2.0.2"
   }
 }
