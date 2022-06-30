@@ -1,6 +1,6 @@
 # sanity-translations-tab
 
-This is the base module for implementing common translation vendor tasks from a Studio, such as sending content to be translated in some specific languages, importing content back etc. Not useful on its own, but a vendor specific plugin will use this for its chrome.
+This is the base module for implementing common translation vendor tasks from a Studio, such as sending content to be translated in some specific languages, importing content back etc. Not useful on its own, but vendor-specific plugins will use this for its chrome.
 
 For guidelines on contributing to this document
 
