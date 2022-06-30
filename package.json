@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
+  "version": "2.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -13,9 +13,8 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test",
-    "lint": "tsdx lint src test",
-    "lint:fix": "tsdx lint src test --fix",
+    "lint": "tsdx lint src",
+    "lint:fix": "tsdx lint src --fix",
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
@@ -28,7 +27,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint src test"
+      "pre-commit": "tsdx lint src"
     }
   },
   "prettier": {
@@ -60,17 +59,20 @@
     }
   ],
   "devDependencies": {
-    "@sanity/client": "^2.11.0",
-    "@sanity/ui": "^0.37.2",
-    "@sanity/util": "^2.19.0",
     "@size-limit/preset-small-lib": "^4.7.0",
     "@types/react": "^16.9.56",
     "@types/styled-components": "^5.1.20",
     "husky": "^4.3.0",
     "size-limit": "^4.7.0",
-    "styled-components": "^5.2.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.0.3",
     "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "sanity-naive-html-serializer": "^2.0.3",
+    "@sanity/client": "^2.11.0",
+    "@sanity/ui": "^0.37.2",
+    "@sanity/util": "^2.19.0",
+    "styled-components": "^5.2.1"
   }
 }
