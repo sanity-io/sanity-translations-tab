@@ -2,8 +2,6 @@
 
 This is the base module for implementing common translation vendor tasks from a Studio, such as sending content to be translated in some specific languages, importing content back etc. Not useful on its own, but vendor-specific plugins will use this for its chrome.
 
-For guidelines on contributing to this document
-
 ## In-studio development
 
 1. Clone this repo into a Studio's `plugins` directory.
