@@ -28,7 +28,12 @@ const baseDocumentLevelConfig = {
     serialized.name = id
     return serialized
   },
-  importTranslation: async (id: string, localeId: string, document: string) => {
+  importTranslation: async (
+    id: string,
+    localeId: string,
+    document: string,
+    idStructure: string = 'delimiter'
+  ) => {
     const serializationVersion = checkSerializationVersion(document)
     let deserialized
     if (serializationVersion === '2') {
@@ -40,7 +45,7 @@ const baseDocumentLevelConfig = {
         schemas
       ).deserializeDocument(document) as SanityDocument
     }
-    await documentLevelPatch(id, deserialized, localeId)
+    await documentLevelPatch(id, deserialized, localeId, idStructure)
   },
   adapter: DummyAdapter,
   secretsNamespace: 'translationService',
@@ -50,7 +55,8 @@ const baseDocumentLevelConfig = {
 const documentLevelPatch = async (
   documentId: string,
   translatedFields: SanityDocument,
-  localeId: string
+  localeId: string,
+  idStructure: string
 ) => {
   let baseDoc: SanityDocument
   if (translatedFields._id && translatedFields._rev) {
@@ -86,8 +92,11 @@ const documentLevelPatch = async (
       .patch(i18nDoc._id, p => p.set(cleanedMerge))
       .commit()
   } else {
-    //TODO: update this to new document internationalization method and make configurable by user
-    merged._id = `drafts.i18n.${documentId}.${localeId}`
+    let targetId = `drafts.${documentId}__i18n_${localeId}`
+    if (idStructure === 'subpath') {
+      targetId = `drafts.i18n.${documentId}.${localeId}`
+    }
+    merged._id = targetId
     //account for legacy implementations of i18n plugin lang
     if (baseDoc._lang) {
       merged._lang = localeId
@@ -103,7 +112,7 @@ const getI18nDoc = async (id: string, localeId: string) => {
   //then fall back to older ones
   let i18nDoc: SanityDocument
   i18nDoc = (await client.fetch(
-    `*[__i18n_base.ref == $id && __i18n_lang == $localeId][0]`,
+    `*[__i18n_base._ref == $id && __i18n_lang == $localeId][0]`,
     { id, localeId }
   )) as SanityDocument
   if (!i18nDoc) {
