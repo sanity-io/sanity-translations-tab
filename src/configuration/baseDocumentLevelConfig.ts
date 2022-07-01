@@ -103,7 +103,7 @@ const getI18nDoc = async (id: string, localeId: string) => {
   //then fall back to older ones
   let i18nDoc: SanityDocument
   i18nDoc = (await client.fetch(
-    `*[__i18n_base.ref == $id && __i18n_lang == $localeId][0]`,
+    `*[__i18n_base._ref == $id && __i18n_lang == $localeId][0]`,
     { id, localeId }
   )) as SanityDocument
   if (!i18nDoc) {
