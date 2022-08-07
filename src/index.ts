@@ -5,6 +5,8 @@ import {
   baseDocumentLevelConfig,
   baseFieldLevelConfig,
   findLatestDraft,
+  documentLevelPatch,
+  fieldLevelPatch,
 } from './configuration'
 import {
   BaseDocumentSerializer,
@@ -25,6 +27,8 @@ export {
   baseFieldLevelConfig,
   //helpers for end developers who may need to customize serialization
   findLatestDraft,
+  documentLevelPatch,
+  fieldLevelPatch,
   BaseDocumentSerializer,
   BaseDocumentDeserializer,
   LegacyBaseDocumentDeserializer,
