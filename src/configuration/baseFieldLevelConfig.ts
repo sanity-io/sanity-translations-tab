@@ -18,7 +18,7 @@ import {
 
 const client = sanityClient.withConfig({ apiVersion: '2022-04-03' })
 
-const baseFieldLevelConfig = {
+export const baseFieldLevelConfig = {
   exportForTranslation: async (id: string) => {
     const doc = await findLatestDraft(id)
     const serialized = BaseDocumentSerializer(schemas).serializeDocument(
@@ -46,7 +46,7 @@ const baseFieldLevelConfig = {
   secretsNamespace: 'translationService',
 }
 
-const fieldLevelPatch = async (
+export const fieldLevelPatch = async (
   documentId: string,
   translatedFields: SanityDocument,
   localeId: string
@@ -73,5 +73,3 @@ const fieldLevelPatch = async (
     .set(merged)
     .commit()
 }
-
-export default baseFieldLevelConfig
