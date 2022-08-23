@@ -26,13 +26,14 @@ type TranslationTabProps = {
     adapter: Adapter
     baseLanguage: string
     secretsNamespace: string | null
-    idStructure: string | null
     exportForTranslation: (id: string) => Promise<Record<string, any>>
     importTranslation: (
       id: string,
       localeId: string,
-      doc: Record<string, any>
+      doc: Record<string, any>,
+      idStructure?: 'subpath' | 'delimiter'
     ) => Promise<void>
+    idStructure?: 'subpath' | 'delimiter'
     workflowOptions?: WorkflowIdentifiers[]
     localeIdAdapter?: (id: string) => string
   }
@@ -63,7 +64,8 @@ const TranslationTab = (props: TranslationTabProps) => {
     }
 
     const importTranslation = (localeId: string, doc: Record<string, any>) => {
-      return importTranslationFunc(documentId, localeId, doc)
+      const idStructure = props.options.idStructure
+      return importTranslationFunc(documentId, localeId, doc, idStructure)
     }
 
     const exportTranslationFunc = props.options.exportForTranslation
