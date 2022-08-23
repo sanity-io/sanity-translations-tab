@@ -49,6 +49,7 @@ export const baseDocumentLevelConfig = {
   },
   adapter: DummyAdapter,
   secretsNamespace: 'translationService',
+  idStructure: 'delimiter',
 }
 
 //document-level patch
