@@ -74,7 +74,7 @@ export const documentLevelPatch = async (
     baseDoc
   ) as SanityDocumentStub
 
-  const i18nDoc = await getI18nDoc(documentId, localeId)
+  const i18nDoc = await getI18nDoc(documentId, localeId, idStructure)
   if (i18nDoc) {
     const cleanedMerge: Record<string, any> = {}
     //don't overwrite any existing system values on the i18n doc
@@ -108,17 +108,21 @@ export const documentLevelPatch = async (
   }
 }
 
-const getI18nDoc = async (id: string, localeId: string) => {
-  //try latest versions of document internationalization patterns first
-  //then fall back to older ones
-  let i18nDoc: SanityDocument
-  i18nDoc = (await client.fetch(
-    `*[__i18n_base._ref == $id && __i18n_lang == $localeId]|order(_updatedAt desc)[0]`,
-    { id, localeId }
-  )) as SanityDocument
-  if (!i18nDoc) {
-    const subpathId = `i18n.${id}.${localeId}`
-    i18nDoc = await findLatestDraft(subpathId)
+const getI18nDoc = async (
+  id: string,
+  localeId: string,
+  idStructure?: 'subpath' | 'delimiter'
+) => {
+  let draft: SanityDocument
+  if (idStructure === 'subpath') {
+    draft = await findLatestDraft(`i18n.${id}.${localeId}`)
+  } else {
+    draft = await findLatestDraft(`${id}__i18n_${localeId}`)
+    //await fallback for people who have not explicitly set this param
+    if (!idStructure && !draft) {
+      draft = await findLatestDraft(`i18n.${id}.${localeId}`)
+    }
   }
-  return i18nDoc
+
+  return draft
 }
