@@ -113,16 +113,16 @@ const getI18nDoc = async (
   localeId: string,
   idStructure?: 'subpath' | 'delimiter'
 ) => {
-  let draft: SanityDocument
+  let doc: SanityDocument
   if (idStructure === 'subpath') {
-    draft = await findLatestDraft(`i18n.${id}.${localeId}`)
+    doc = await findLatestDraft(`i18n.${id}.${localeId}`)
   } else {
-    draft = await findLatestDraft(`${id}__i18n_${localeId}`)
+    doc = await findLatestDraft(`${id}__i18n_${localeId}`)
     //await fallback for people who have not explicitly set this param
-    if (!idStructure && !draft) {
-      draft = await findLatestDraft(`i18n.${id}.${localeId}`)
+    if (!idStructure && !doc) {
+      doc = await findLatestDraft(`i18n.${id}.${localeId}`)
     }
   }
 
-  return draft
+  return doc
 }
