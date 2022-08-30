@@ -16,11 +16,15 @@ export type TranslationTaskLocaleStatus = {
   progress: number
 }
 
+//this varies according to provider
+//not every vendor uses every field
 export type Secrets = {
   organization: string
   project: string
-  token: string | null
-  secret: string | null
+  token?: string
+  secret?: string
+  username?: string
+  password?: string
 }
 
 export type WorkflowIdentifiers = {
