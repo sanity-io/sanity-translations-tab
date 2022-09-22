@@ -12,7 +12,7 @@ export type ContextProps = {
   baseLanguage: string
   secrets: Secrets
   workflowOptions?: WorkflowIdentifiers[]
-  localeIdAdapter?: (id: string) => string
+  localeIdAdapter?: (id: string) => string | Promise<string>
 }
 
 export const TranslationContext = React.createContext<ContextProps | null>(null)

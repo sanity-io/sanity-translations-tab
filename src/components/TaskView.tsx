@@ -36,9 +36,6 @@ export const TaskView = ({ task, locales, refreshTask }: JobProps) => {
 
     const locale = getLocale(localeId, locales)
     const localeTitle = locale?.description || localeId
-    const sanityId = context.localeIdAdapter
-      ? context.localeIdAdapter(localeId)
-      : localeId
 
     try {
       const translation = await context.adapter.getTranslation(
@@ -46,6 +43,11 @@ export const TaskView = ({ task, locales, refreshTask }: JobProps) => {
         localeId,
         context.secrets
       )
+
+      const sanityId = context.localeIdAdapter
+        ? await context.localeIdAdapter(localeId)
+        : localeId
+
       await context.importTranslation(sanityId, translation)
 
       toast.push({
