@@ -44,9 +44,10 @@ export const getDefaultDocumentNode = ({ schemaType }) => {
             },
           ],
           /**
-           * Optional function used on translation import to Sanity, if the
-           * locale codes used by the translation vendor don't match Sanity's.
-           * Receives the vendor locale ID and returns the corresponding Sanity id.
+           * Optional sync or async function used on translation import to
+           * Sanity, if the locale codes used by the translation vendor don't
+           * match Sanity's. Receives the vendor locale ID and returns the
+           * corresponding Sanity ID.
            */
           localeIdAdapter: translationVendorId => sanityId,
         }),
