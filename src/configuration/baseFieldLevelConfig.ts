@@ -28,7 +28,13 @@ export const baseFieldLevelConfig = {
     serialized.name = id
     return serialized
   },
-  importTranslation: async (id: string, localeId: string, document: string) => {
+  importTranslation: async (
+    id: string,
+    localeId: string,
+    document: string,
+    _idStructure: undefined,
+    baseLanguage: string = 'en'
+  ) => {
     const serializationVersion = checkSerializationVersion(document)
     let deserialized
     if (serializationVersion === '2') {
@@ -40,7 +46,7 @@ export const baseFieldLevelConfig = {
         schemas
       ).deserializeDocument(document) as SanityDocument
     }
-    return fieldLevelPatch(id, deserialized, localeId)
+    return fieldLevelPatch(id, deserialized, localeId, baseLanguage)
   },
   adapter: DummyAdapter,
   secretsNamespace: 'translationService',
@@ -49,7 +55,8 @@ export const baseFieldLevelConfig = {
 export const fieldLevelPatch = async (
   documentId: string,
   translatedFields: SanityDocument,
-  localeId: string
+  localeId: string,
+  baseLanguage: string = 'en'
 ) => {
   let baseDoc: SanityDocument
   if (translatedFields._rev && translatedFields._id) {
@@ -65,7 +72,7 @@ export const fieldLevelPatch = async (
     translatedFields,
     baseDoc,
     localeId,
-    'en'
+    baseLanguage
   )
 
   await client

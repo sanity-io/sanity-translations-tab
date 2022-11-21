@@ -50,6 +50,12 @@ export const getDefaultDocumentNode = ({ schemaType }) => {
            * corresponding Sanity ID.
            */
           localeIdAdapter: translationVendorId => sanityId,
+
+          /**
+           * For field-level translations, the key for the "source content"
+           *  (e.g. "en" or "en_US").
+           */
+          baseLanguage: 'en_US',
         }),
     ])
   }
