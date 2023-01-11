@@ -20,9 +20,10 @@
     "analyze": "size-limit --why"
   },
   "peerDependencies": {
-    "@sanity/ui": "^0.36.8",
-    "react": "^16 || ^17",
-    "react-dom": "^16 || ^17",
+    "@sanity/ui": "^1",
+    "react": "^18",
+    "react-dom": "^18",
+    "sanity": "^3",
     "styled-components": "^5.3.3"
   },
   "husky": {
@@ -45,24 +46,19 @@
   "size-limit": [
     {
       "path": "dist/sanity-translations-tab.cjs.production.min.js",
-      "limit": "30 KB",
-      "ignore": [
-        "part:@sanity/base/client"
-      ]
+      "limit": "30 KB"
     },
     {
       "path": "dist/sanity-translations-tab.esm.js",
-      "limit": "10 KB",
-      "ignore": [
-        "part:@sanity/base/client"
-      ]
+      "limit": "10 KB"
     }
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.7.0",
-    "@types/react": "^16.9.56",
+    "@types/react": "^18",
     "@types/styled-components": "^5.1.20",
     "husky": "^4.3.0",
+    "sanity": "^3.0.0",
     "size-limit": "^4.7.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.0.3",
@@ -70,9 +66,8 @@
   },
   "dependencies": {
     "sanity-naive-html-serializer": "^2.0.6",
-    "@sanity/client": "^2.11.0",
-    "@sanity/ui": "^0.37.2",
-    "@sanity/util": "^2.19.0",
+    "@sanity/ui": "^1.0.0",
+    "@sanity/util": "^3.0.0",
     "styled-components": "^5.2.1"
   }
 }

@@ -1,6 +1,12 @@
 import TranslationsTab from './components/TranslationsTab'
 import { DummyAdapter } from './adapter'
-import { Secrets, Adapter } from './types'
+import {
+  Secrets,
+  Adapter,
+  ExportForTranslation,
+  ImportTranslation,
+  TranslationFunctionContext,
+} from './types'
 import {
   baseDocumentLevelConfig,
   baseFieldLevelConfig,
@@ -20,6 +26,9 @@ import {
 export {
   Secrets,
   Adapter,
+  ExportForTranslation,
+  ImportTranslation,
+  TranslationFunctionContext,
   TranslationsTab,
   DummyAdapter,
   //helpers for setting up easy, standard configuration across different translation vendors

@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react'
-import sanityClient from 'part:@sanity/base/client'
-import { SanityDocumentStub } from '@sanity/client'
-
-const client = sanityClient.withConfig({ apiVersion: '2021-03-25' })
+import { SanityDocumentLike } from 'sanity'
+import { useClient } from './useClient'
 
 export function useSecrets<T>(id: string) {
   const [loading, setLoading] = useState<boolean>(true)
   const [secrets, setSecrets] = useState<T | null>(null)
+  const client = useClient()
 
   useEffect(() => {
     async function fetchData() {
       client
         .fetch('* [_id == $id][0]', { id })
-        .then((doc: SanityDocumentStub) => {
+        .then((doc: SanityDocumentLike) => {
           const result: Record<string, any> = {}
           for (const key in doc) {
             if (key[0] !== '_') {
@@ -24,7 +23,7 @@ export function useSecrets<T>(id: string) {
         })
     }
     fetchData()
-  }, [id])
+  }, [id, client])
 
   return { loading, secrets }
 }

@@ -1,3 +1,7 @@
+import { SanityClient } from 'sanity'
+import Schema from '@sanity/schema'
+import { SerializedDocument } from 'sanity-naive-html-serializer/dist/types'
+
 export type TranslationTask = {
   taskId: string
   documentId: string
@@ -51,3 +55,22 @@ export interface Adapter {
     secrets: Secrets | null
   ) => Promise<any | null>
 }
+
+export interface TranslationFunctionContext {
+  client: SanityClient
+  schema: Schema
+}
+
+export type ExportForTranslation = (
+  id: string,
+  context: TranslationFunctionContext
+) => Promise<SerializedDocument>
+
+export type ImportTranslation = (
+  id: string,
+  localeId: string,
+  document: string,
+  context: TranslationFunctionContext,
+  idStructure?: 'subpath' | 'delimiter',
+  baseLanguage?: string
+) => Promise<void>

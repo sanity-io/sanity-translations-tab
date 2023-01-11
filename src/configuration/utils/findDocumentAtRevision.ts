@@ -1,9 +1,11 @@
-import sanityClient from 'part:@sanity/base/client'
-
-const client = sanityClient.withConfig({ apiVersion: '2022-04-03' })
+import { SanityClient } from 'sanity'
 
 //revision fetch
-const findDocumentAtRevision = async (documentId: string, rev: string) => {
+const findDocumentAtRevision = async (
+  documentId: string,
+  rev: string,
+  client: SanityClient
+) => {
   const dataset = client.config().dataset
   let baseUrl = `/data/history/${dataset}/documents/${documentId}?revision=${rev}`
   let url = client.getUrl(baseUrl)

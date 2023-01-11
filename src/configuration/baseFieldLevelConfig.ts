@@ -1,40 +1,34 @@
-import schemas from 'part:@sanity/base/schema'
-import sanityClient from 'part:@sanity/base/client'
-
+import { SanityClient, SanityDocument } from 'sanity'
 import {
   BaseDocumentSerializer,
   BaseDocumentDeserializer,
   LegacyBaseDocumentDeserializer,
   BaseDocumentMerger,
 } from 'sanity-naive-html-serializer'
-import { SanityDocument } from '@sanity/client'
 
 import { DummyAdapter } from '../adapter'
+import { ExportForTranslation, ImportTranslation } from '../types'
 import {
   findLatestDraft,
   findDocumentAtRevision,
   checkSerializationVersion,
 } from './utils'
 
-const client = sanityClient.withConfig({ apiVersion: '2022-04-03' })
-
 export const baseFieldLevelConfig = {
-  exportForTranslation: async (id: string) => {
-    const doc = await findLatestDraft(id)
-    const serialized = BaseDocumentSerializer(schemas).serializeDocument(
+  exportForTranslation: async (...params: Parameters<ExportForTranslation>) => {
+    const [id, context] = params
+    const { client, schema } = context
+    const doc = await findLatestDraft(id, client)
+    const serialized = BaseDocumentSerializer(schema).serializeDocument(
       doc,
       'field'
     )
     serialized.name = id
     return serialized
   },
-  importTranslation: async (
-    id: string,
-    localeId: string,
-    document: string,
-    _idStructure: undefined,
-    baseLanguage: string = 'en'
-  ) => {
+  importTranslation: async (...params: Parameters<ImportTranslation>) => {
+    const [id, localeId, document, context, , baseLanguage = 'en'] = params
+    const { client, schema } = context
     const serializationVersion = checkSerializationVersion(document)
     let deserialized
     if (serializationVersion === '2') {
@@ -42,11 +36,11 @@ export const baseFieldLevelConfig = {
         document
       ) as SanityDocument
     } else {
-      deserialized = LegacyBaseDocumentDeserializer(
-        schemas
-      ).deserializeDocument(document) as SanityDocument
+      deserialized = LegacyBaseDocumentDeserializer(schema).deserializeDocument(
+        document
+      ) as SanityDocument
     }
-    return fieldLevelPatch(id, deserialized, localeId, baseLanguage)
+    return fieldLevelPatch(id, deserialized, localeId, client, baseLanguage)
   },
   adapter: DummyAdapter,
   secretsNamespace: 'translationService',
@@ -56,16 +50,18 @@ export const fieldLevelPatch = async (
   documentId: string,
   translatedFields: SanityDocument,
   localeId: string,
+  client: SanityClient,
   baseLanguage: string = 'en'
 ) => {
   let baseDoc: SanityDocument
   if (translatedFields._rev && translatedFields._id) {
     baseDoc = await findDocumentAtRevision(
       translatedFields._id,
-      translatedFields._rev
+      translatedFields._rev,
+      client
     )
   } else {
-    baseDoc = await findLatestDraft(documentId)
+    baseDoc = await findLatestDraft(documentId, client)
   }
 
   const merged = BaseDocumentMerger.fieldLevelMerge(
