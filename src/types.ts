@@ -9,6 +9,7 @@ export type TranslationLocale = {
   localeId: string
   description: string
   enabled?: boolean
+  selected?: boolean
 }
 
 export type TranslationTaskLocaleStatus = {

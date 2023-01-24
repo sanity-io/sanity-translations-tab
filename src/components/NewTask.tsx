@@ -1,4 +1,4 @@
-import React, { useState, useContext, ChangeEvent } from 'react'
+import React, { useState, useContext, ChangeEvent, useEffect } from 'react'
 import styled from 'styled-components'
 import {
   Button,
@@ -65,6 +65,17 @@ export const NewTask = ({ locales, refreshTask }: Props) => {
   const [selectedLocales, setSelectedLocales] = useState<React.ReactText[]>([])
   const [selectedWorkflowUid, setSelectedWorkflowUid] = useState<string>()
   const [isBusy, setIsBusy] = useState(false)
+
+  useEffect(
+    function preselectLocales() {
+      setSelectedLocales(
+        locales
+          .filter(locale => locale.enabled !== false && locale.selected)
+          .map(locale => locale.localeId)
+      )
+    },
+    [locales]
+  )
 
   const context = useContext(TranslationContext)
   const toast = useToast()
