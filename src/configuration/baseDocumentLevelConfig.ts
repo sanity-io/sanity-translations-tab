@@ -1,51 +1,34 @@
-import { SanityClient, SanityDocument, SanityDocumentLike } from 'sanity'
+import {SanityClient, SanityDocument, SanityDocumentLike} from 'sanity'
 
 import {
   BaseDocumentSerializer,
   BaseDocumentDeserializer,
   BaseDocumentMerger,
-  LegacyBaseDocumentDeserializer,
+  SerializedDocument,
 } from 'sanity-naive-html-serializer'
 
-import { DummyAdapter } from '../adapter'
-import { ExportForTranslation, ImportTranslation } from '../types'
-import {
-  findLatestDraft,
-  findDocumentAtRevision,
-  checkSerializationVersion,
-} from './utils'
+import {DummyAdapter} from '../adapter'
+import {ExportForTranslation, ImportTranslation} from '../types'
+import {findLatestDraft, findDocumentAtRevision} from './utils'
 
-export const baseDocumentLevelConfig = {
-  exportForTranslation: async (...params: Parameters<ExportForTranslation>) => {
-    const [id, context] = params
-    const { client, schema } = context
-    const doc = await findLatestDraft(id, client)
-    const serialized = BaseDocumentSerializer(schema).serializeDocument(
-      doc,
-      'document'
-    )
-    serialized.name = id
-    return serialized
-  },
-  importTranslation: async (...params: Parameters<ImportTranslation>) => {
-    const [id, localeId, document, context, idStructure] = params
-    const { client, schema } = context
-    const serializationVersion = checkSerializationVersion(document)
-    let deserialized
-    if (serializationVersion === '2') {
-      deserialized = BaseDocumentDeserializer.deserializeDocument(
-        document
-      ) as SanityDocument
-    } else {
-      deserialized = LegacyBaseDocumentDeserializer(schema).deserializeDocument(
-        document
-      ) as SanityDocument
+const getI18nDoc = async (
+  id: string,
+  localeId: string,
+  client: SanityClient,
+  idStructure?: 'subpath' | 'delimiter'
+) => {
+  let doc: SanityDocument
+  if (idStructure === 'subpath') {
+    doc = await findLatestDraft(`i18n.${id}.${localeId}`, client)
+  } else {
+    doc = await findLatestDraft(`${id}__i18n_${localeId}`, client)
+    //await fallback for people who have not explicitly set this param
+    if (!idStructure && !doc) {
+      doc = await findLatestDraft(`i18n.${id}.${localeId}`, client)
     }
-    await documentLevelPatch(id, deserialized, localeId, client, idStructure)
-  },
-  adapter: DummyAdapter,
-  secretsNamespace: 'translationService',
-  idStructure: 'delimiter',
+  }
+
+  return doc
 }
 
 //document-level patch
@@ -55,14 +38,11 @@ export const documentLevelPatch = async (
   localeId: string,
   client: SanityClient,
   idStructure?: 'subpath' | 'delimiter'
-) => {
+): Promise<void> => {
   let baseDoc: SanityDocument
   if (translatedFields._id && translatedFields._rev) {
-    baseDoc = await findDocumentAtRevision(
-      translatedFields._id,
-      translatedFields._rev,
-      client
-    )
+    //eslint-disable-next-line no-use-before-define -- this is defined below
+    baseDoc = await findDocumentAtRevision(translatedFields._id, translatedFields._rev, client)
   } else {
     baseDoc = await findLatestDraft(documentId, client)
   }
@@ -88,7 +68,7 @@ export const documentLevelPatch = async (
     await client
       .transaction()
       //@ts-ignore
-      .patch(i18nDoc._id, p => p.set(cleanedMerge))
+      .patch(i18nDoc._id, (p) => p.set(cleanedMerge))
       .commit()
   } else {
     let targetId = `drafts.${documentId}__i18n_${localeId}`
@@ -100,28 +80,31 @@ export const documentLevelPatch = async (
     if (baseDoc._lang) {
       merged._lang = localeId
     } else {
+      //eslint-disable-next-line camelcase -- this is configured by another plugin
       merged.__i18n_lang = localeId
     }
     client.create(merged)
   }
 }
 
-const getI18nDoc = async (
-  id: string,
-  localeId: string,
-  client: SanityClient,
-  idStructure?: 'subpath' | 'delimiter'
-) => {
-  let doc: SanityDocument
-  if (idStructure === 'subpath') {
-    doc = await findLatestDraft(`i18n.${id}.${localeId}`, client)
-  } else {
-    doc = await findLatestDraft(`${id}__i18n_${localeId}`, client)
-    //await fallback for people who have not explicitly set this param
-    if (!idStructure && !doc) {
-      doc = await findLatestDraft(`i18n.${id}.${localeId}`, client)
-    }
-  }
-
-  return doc
+export const baseDocumentLevelConfig = {
+  exportForTranslation: async (
+    ...params: Parameters<ExportForTranslation>
+  ): Promise<SerializedDocument> => {
+    const [id, context] = params
+    const {client, schema} = context
+    const doc = await findLatestDraft(id, client)
+    const serialized = BaseDocumentSerializer(schema).serializeDocument(doc, 'document')
+    serialized.name = id
+    return serialized
+  },
+  importTranslation: async (...params: Parameters<ImportTranslation>): Promise<void> => {
+    const [id, localeId, document, context, idStructure] = params
+    const {client} = context
+    const deserialized = BaseDocumentDeserializer.deserializeDocument(document) as SanityDocument
+    await documentLevelPatch(id, deserialized, localeId, client, idStructure)
+  },
+  adapter: DummyAdapter,
+  secretsNamespace: 'translationService',
+  idStructure: 'delimiter',
 }

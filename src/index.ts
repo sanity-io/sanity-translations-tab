@@ -1,5 +1,5 @@
 import TranslationsTab from './components/TranslationsTab'
-import { DummyAdapter } from './adapter'
+import {DummyAdapter} from './adapter'
 import {
   Secrets,
   Adapter,
@@ -18,17 +18,12 @@ import {
   BaseDocumentSerializer,
   BaseDocumentDeserializer,
   BaseDocumentMerger,
-  LegacyBaseDocumentDeserializer,
   defaultStopTypes,
   customSerializers,
 } from 'sanity-naive-html-serializer'
 
+export type {Secrets, Adapter, ExportForTranslation, ImportTranslation, TranslationFunctionContext}
 export {
-  Secrets,
-  Adapter,
-  ExportForTranslation,
-  ImportTranslation,
-  TranslationFunctionContext,
   TranslationsTab,
   DummyAdapter,
   //helpers for setting up easy, standard configuration across different translation vendors
@@ -40,7 +35,6 @@ export {
   fieldLevelPatch,
   BaseDocumentSerializer,
   BaseDocumentDeserializer,
-  LegacyBaseDocumentDeserializer,
   BaseDocumentMerger,
   defaultStopTypes,
   customSerializers,

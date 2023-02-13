@@ -1,5 +1,5 @@
-import { useClient as useSanityClient } from 'sanity'
+import {SanityClient, useClient as useSanityClient} from 'sanity'
 
-export const useClient = () => {
-  return useSanityClient({ apiVersion: '2022-12-07' })
+export const useClient = (): SanityClient => {
+  return useSanityClient({apiVersion: '2022-12-07'})
 }

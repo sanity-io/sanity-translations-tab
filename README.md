@@ -1,3 +1,13 @@
+> This is a **Sanity Studio v3** plugin.
+
+## Installation
+
+```sh
+npm install sanity-translations-tab
+```
+
+## Usage
+
 # sanity-translations-tab
 
 This is the base module for implementing common translation vendor tasks from a Studio, such as sending content to be translated in some specific languages, importing content back etc. Not useful on its own, but vendor-specific plugins will use this for its chrome.
@@ -98,3 +108,24 @@ Assuming you already have a studio, the following will get you up and running wi
 7. Run `sanity start` to run the studio locally.
 8. Run `npm run start` from the `sanity-translations-tab` directory to start a watch task.
 9. Start making changes to the translations tab, as needed, and they should automatically compile in the studio in the browser.
+
+
+## License
+
+[MIT](LICENSE) © Sanity.io
+
+
+## Develop & test
+
+This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
+with default configuration for build & watch scripts.
+
+See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
+on how to run this plugin with hotreload in the studio.
+
+### Release new version
+
+Run ["CI & Release" workflow](https://github.com/sanity-io/sanity-translations-tab/actions/workflows/main.yml).
+Make sure to select the main branch and check "Release new version".
+
+Semantic release will only release on configured branches, so it is safe to run release on any branch.
