@@ -1,71 +1,27 @@
-import schemas from 'part:@sanity/base/schema'
-import sanityClient from 'part:@sanity/base/client'
-
+import {SanityClient, SanityDocument} from 'sanity'
 import {
   BaseDocumentSerializer,
   BaseDocumentDeserializer,
-  LegacyBaseDocumentDeserializer,
   BaseDocumentMerger,
+  SerializedDocument,
 } from 'sanity-naive-html-serializer'
-import { SanityDocument } from '@sanity/client'
 
-import { DummyAdapter } from '../adapter'
-import {
-  findLatestDraft,
-  findDocumentAtRevision,
-  checkSerializationVersion,
-} from './utils'
-
-const client = sanityClient.withConfig({ apiVersion: '2022-04-03' })
-
-export const baseFieldLevelConfig = {
-  exportForTranslation: async (id: string) => {
-    const doc = await findLatestDraft(id)
-    const serialized = BaseDocumentSerializer(schemas).serializeDocument(
-      doc,
-      'field'
-    )
-    serialized.name = id
-    return serialized
-  },
-  importTranslation: async (
-    id: string,
-    localeId: string,
-    document: string,
-    _idStructure: undefined,
-    baseLanguage: string = 'en'
-  ) => {
-    const serializationVersion = checkSerializationVersion(document)
-    let deserialized
-    if (serializationVersion === '2') {
-      deserialized = BaseDocumentDeserializer.deserializeDocument(
-        document
-      ) as SanityDocument
-    } else {
-      deserialized = LegacyBaseDocumentDeserializer(
-        schemas
-      ).deserializeDocument(document) as SanityDocument
-    }
-    return fieldLevelPatch(id, deserialized, localeId, baseLanguage)
-  },
-  adapter: DummyAdapter,
-  secretsNamespace: 'translationService',
-}
+import {DummyAdapter} from '../adapter'
+import {ExportForTranslation, ImportTranslation} from '../types'
+import {findLatestDraft, findDocumentAtRevision} from './utils'
 
 export const fieldLevelPatch = async (
   documentId: string,
   translatedFields: SanityDocument,
   localeId: string,
+  client: SanityClient,
   baseLanguage: string = 'en'
-) => {
+): Promise<void> => {
   let baseDoc: SanityDocument
   if (translatedFields._rev && translatedFields._id) {
-    baseDoc = await findDocumentAtRevision(
-      translatedFields._id,
-      translatedFields._rev
-    )
+    baseDoc = await findDocumentAtRevision(translatedFields._id, translatedFields._rev, client)
   } else {
-    baseDoc = await findLatestDraft(documentId)
+    baseDoc = await findLatestDraft(documentId, client)
   }
 
   const merged = BaseDocumentMerger.fieldLevelMerge(
@@ -75,8 +31,26 @@ export const fieldLevelPatch = async (
     baseLanguage
   )
 
-  await client
-    .patch(baseDoc._id)
-    .set(merged)
-    .commit()
+  await client.patch(baseDoc._id).set(merged).commit()
+}
+
+export const baseFieldLevelConfig = {
+  exportForTranslation: async (
+    ...params: Parameters<ExportForTranslation>
+  ): Promise<SerializedDocument> => {
+    const [id, context] = params
+    const {client, schema} = context
+    const doc = await findLatestDraft(id, client)
+    const serialized = BaseDocumentSerializer(schema).serializeDocument(doc, 'field')
+    serialized.name = id
+    return serialized
+  },
+  importTranslation: (...params: Parameters<ImportTranslation>): Promise<void> => {
+    const [id, localeId, document, context, , baseLanguage = 'en'] = params
+    const {client} = context
+    const deserialized = BaseDocumentDeserializer.deserializeDocument(document) as SanityDocument
+    return fieldLevelPatch(id, deserialized, localeId, client, baseLanguage)
+  },
+  adapter: DummyAdapter,
+  secretsNamespace: 'translationService',
 }

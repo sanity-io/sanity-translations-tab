@@ -1,14 +1,12 @@
 import React from 'react'
-import { Adapter, Secrets, WorkflowIdentifiers } from '../types'
+import {SerializedDocument} from 'sanity-naive-html-serializer'
+import {Adapter, Secrets, WorkflowIdentifiers} from '../types'
 
 export type ContextProps = {
   documentId: string
   adapter: Adapter
-  importTranslation: (
-    languageId: string,
-    document: Record<string, any>
-  ) => Promise<void>
-  exportForTranslation: (documentId: string) => Promise<Record<string, any>>
+  importTranslation: (languageId: string, document: string) => Promise<void>
+  exportForTranslation: (documentId: string) => Promise<SerializedDocument>
   baseLanguage: string
   secrets: Secrets
   workflowOptions?: WorkflowIdentifiers[]

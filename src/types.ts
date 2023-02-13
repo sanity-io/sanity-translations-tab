@@ -1,3 +1,11 @@
+import {SanityClient, Schema} from 'sanity'
+import {SerializedDocument} from 'sanity-naive-html-serializer'
+
+export type TranslationTaskLocaleStatus = {
+  localeId: string
+  progress: number
+}
+
 export type TranslationTask = {
   taskId: string
   documentId: string
@@ -9,11 +17,6 @@ export type TranslationLocale = {
   localeId: string
   description: string
   enabled?: boolean
-}
-
-export type TranslationTaskLocaleStatus = {
-  localeId: string
-  progress: number
 }
 
 //this varies according to provider
@@ -45,9 +48,24 @@ export interface Adapter {
     secrets: Secrets | null,
     workflowUid?: string
   ) => Promise<TranslationTask>
-  getTranslation: (
-    taskid: string,
-    localeId: string,
-    secrets: Secrets | null
-  ) => Promise<any | null>
+  getTranslation: (taskid: string, localeId: string, secrets: Secrets | null) => Promise<any | null>
 }
+
+export interface TranslationFunctionContext {
+  client: SanityClient
+  schema: Schema
+}
+
+export type ExportForTranslation = (
+  id: string,
+  context: TranslationFunctionContext
+) => Promise<SerializedDocument>
+
+export type ImportTranslation = (
+  id: string,
+  localeId: string,
+  document: string,
+  context: TranslationFunctionContext,
+  idStructure?: 'subpath' | 'delimiter',
+  baseLanguage?: string
+) => Promise<void>

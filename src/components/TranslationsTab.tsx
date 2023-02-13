@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
-import { SanityDocument } from '@sanity/client'
+import { SanityDocument, useSchema } from 'sanity'
+import Schema from '@sanity/schema'
 import { randomKey } from '@sanity/util/content'
 import {
   ThemeProvider,
@@ -15,8 +16,15 @@ import {
 
 import { TranslationContext } from './TranslationContext'
 import { TranslationView } from './TranslationView'
+import { useClient } from '../hooks/useClient'
 import { useSecrets } from '../hooks/useSecrets'
-import { Adapter, Secrets, WorkflowIdentifiers } from '../types'
+import {
+  Adapter,
+  ExportForTranslation,
+  ImportTranslation,
+  Secrets,
+  WorkflowIdentifiers,
+} from '../types'
 
 type TranslationTabProps = {
   document: {
@@ -26,14 +34,8 @@ type TranslationTabProps = {
     adapter: Adapter
     baseLanguage: string
     secretsNamespace: string | null
-    exportForTranslation: (id: string) => Promise<Record<string, any>>
-    importTranslation: (
-      id: string,
-      localeId: string,
-      doc: Record<string, any>,
-      idStructure?: 'subpath' | 'delimiter',
-      baseLanguage?: string
-    ) => Promise<void>
+    exportForTranslation: ExportForTranslation
+    importTranslation: ImportTranslation
     idStructure?: 'subpath' | 'delimiter'
     workflowOptions?: WorkflowIdentifiers[]
     localeIdAdapter?: (id: string) => string
@@ -42,6 +44,10 @@ type TranslationTabProps = {
 
 const TranslationTab = (props: TranslationTabProps) => {
   const { displayed } = props.document
+  const ctx = {
+    client: useClient(),
+    schema: useSchema() as Schema,
+  }
 
   const documentId =
     displayed && displayed._id
@@ -64,13 +70,14 @@ const TranslationTab = (props: TranslationTabProps) => {
       })
     }
 
-    const importTranslation = (localeId: string, doc: Record<string, any>) => {
+    const importTranslation = (localeId: string, doc: string) => {
       const baseLanguage = props.options.baseLanguage
       const idStructure = props.options.idStructure
       return importTranslationFunc(
         documentId,
         localeId,
         doc,
+        ctx,
         idStructure,
         baseLanguage
       )
@@ -90,11 +97,11 @@ const TranslationTab = (props: TranslationTabProps) => {
     }
 
     const exportForTranslation = (id: string) => {
-      return exportTranslationFunc(id)
+      return exportTranslationFunc(id, ctx)
     }
 
     return { errors: allErrors, importTranslation, exportForTranslation }
-  }, [props.options, documentId])
+  }, [props.options, documentId, ctx])
 
   const { loading, secrets } = useSecrets<Secrets>(
     `${props.options.secretsNamespace || 'translationService'}.secrets`

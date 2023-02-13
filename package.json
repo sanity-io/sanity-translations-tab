@@ -1,78 +1,105 @@
 {
-  "version": "2.0.9",
+  "name": "sanity-translations-tab",
+  "version": "3.0.0",
+  "description": "This is the base module for implementing common translation vendor tasks from a Studio, such as sending content to be translated in some specific languages, importing content back etc. Not useful on its own, but vendor-specific plugins will use this for its chrome.",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/sanity-translations-tab#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity-translations-tab/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sanity-io/sanity-translations-tab.git"
+  },
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "author": "Sanity.io",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "source": "./src/index.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.esm.js",
+      "default": "./dist/index.esm.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
-    "src"
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
   ],
-  "engines": {
-    "node": ">=10"
-  },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "lint": "tsdx lint src",
-    "lint:fix": "tsdx lint src --fix",
-    "prepare": "tsdx build",
-    "size": "size-limit",
-    "analyze": "size-limit --why"
-  },
-  "peerDependencies": {
-    "@sanity/ui": "^0.36.8",
-    "react": "^16 || ^17",
-    "react-dom": "^16 || ^17",
-    "styled-components": "^5.3.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint src"
-    }
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "es5"
-  },
-  "name": "sanity-translations-tab",
-  "author": "Sanity.io",
-  "contributors": [
-    "annie@all-turtles.com"
-  ],
-  "module": "dist/sanity-translations-tab.esm.js",
-  "size-limit": [
-    {
-      "path": "dist/sanity-translations-tab.cjs.production.min.js",
-      "limit": "30 KB",
-      "ignore": [
-        "part:@sanity/base/client"
-      ]
-    },
-    {
-      "path": "dist/sanity-translations-tab.esm.js",
-      "limit": "10 KB",
-      "ignore": [
-        "part:@sanity/base/client"
-      ]
-    }
-  ],
-  "devDependencies": {
-    "@size-limit/preset-small-lib": "^4.7.0",
-    "@types/react": "^16.9.56",
-    "@types/styled-components": "^5.1.20",
-    "husky": "^4.3.0",
-    "size-limit": "^4.7.0",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.0.3",
-    "typescript": "^4.0.5"
+    "build": "run-s clean && plugin-kit verify-package --silent && pkg-utils build --strict && pkg-utils --strict",
+    "lint": "eslint .",
+    "prepare": "husky install",
+    "clean": "rimraf dist",
+    "format": "prettier --write --cache --ignore-unknown .",
+    "link-watch": "plugin-kit link-watch",
+    "prepublishOnly": "run-s build",
+    "watch": "pkg-utils watch --strict"
   },
   "dependencies": {
-    "sanity-naive-html-serializer": "^2.0.6",
-    "@sanity/client": "^2.11.0",
-    "@sanity/ui": "^0.37.2",
-    "@sanity/util": "^2.19.0",
+    "@sanity/incompatible-plugin": "^1.0.4",
+    "@sanity/ui": "^1.0.0",
+    "@sanity/util": "^3.0.0",
+    "sanity-naive-html-serializer": "^3.0.1",
     "styled-components": "^5.2.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.4.2",
+    "@commitlint/config-conventional": "^17.4.2",
+    "@sanity/pkg-utils": "^2.2.4",
+    "@sanity/plugin-kit": "^3.1.4",
+    "@sanity/semantic-release-preset": "^4.0.0",
+    "@types/react": "^18.0.28",
+    "@types/styled-components": "^5.1.20",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-sanity": "^6.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.4",
+    "prettier-plugin-packagejson": "^2.4.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-is": "^18.2.0",
+    "rimraf": "^4.1.2",
+    "sanity": "^3.3.1",
+    "styled-components": "^5.3.6",
+    "tslib": "^2.0.3",
+    "typescript": "^4.9.5"
+  },
+  "peerDependencies": {
+    "@sanity/ui": "^1",
+    "react": "^18",
+    "react-dom": "^18",
+    "sanity": "^3",
+    "styled-components": "^5.2"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "contributors": [
+    "annie@all-turtles.com",
+    "kkuhnen@gala.games"
+  ],
+  "sanityPlugin": {
+     "verifyPackage": {
+        "packageName": false
+     }
   }
 }

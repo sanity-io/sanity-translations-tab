@@ -1,18 +1,13 @@
-import { SanityDocument } from '@sanity/types'
-import sanityClient from 'part:@sanity/base/client'
-
-const client = sanityClient.withConfig({ apiVersion: '2022-04-03' })
+import {SanityClient, SanityDocument} from 'sanity'
 
 //document fetch
-const findLatestDraft = async (documentId: string) => {
+export const findLatestDraft = (
+  documentId: string,
+  client: SanityClient
+): Promise<SanityDocument> => {
   const query = `*[_id == $id || _id == $draftId]`
-  const params = { id: documentId, draftId: `drafts.${documentId}` }
+  const params = {id: documentId, draftId: `drafts.${documentId}`}
   return client
     .fetch(query, params)
-    .then(
-      (docs: SanityDocument[]) =>
-        docs.find(doc => doc._id.includes('draft')) ?? docs[0]
-    )
+    .then((docs: SanityDocument[]) => docs.find((doc) => doc._id.includes('draft')) ?? docs[0])
 }
-
-export default findLatestDraft
