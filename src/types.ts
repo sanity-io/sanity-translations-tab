@@ -17,6 +17,7 @@ export type TranslationLocale = {
   localeId: string
   description: string
   enabled?: boolean
+  selected?: boolean
 }
 
 //this varies according to provider
