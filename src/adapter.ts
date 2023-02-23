@@ -16,7 +16,7 @@ const addTask = (task: TranslationTask) => {
 
 const getTaskDetails = (taskId: string): TranslationTask | null => {
   const task = getTasks().find((t) => t.taskId === taskId)
-  return task ? task : null
+  return task || null
 }
 
 // Dummy translation vendor adapter that just stores translation tasks to
@@ -49,7 +49,7 @@ export const DummyAdapter: Adapter = {
     return new Promise((resolve) => {
       const tasks = getTasks()
       const result = tasks.length ? tasks[tasks.length - 1] : null
-      resolve(result)
+      resolve(result ?? {documentId, taskId: documentId, locales: []})
     })
   },
   createTask: (documentId: string, document: Record<string, any>, localeIds: string[]) => {
