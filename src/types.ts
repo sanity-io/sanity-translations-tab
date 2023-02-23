@@ -28,6 +28,7 @@ export type Secrets = {
   secret?: string
   username?: string
   password?: string
+  proxy?: string
 }
 
 export type WorkflowIdentifiers = {
@@ -37,10 +38,7 @@ export type WorkflowIdentifiers = {
 
 export interface Adapter {
   getLocales: (secrets: Secrets | null) => Promise<TranslationLocale[]>
-  getTranslationTask: (
-    documentId: string,
-    secrets: Secrets | null
-  ) => Promise<TranslationTask | null>
+  getTranslationTask: (documentId: string, secrets: Secrets | null) => Promise<TranslationTask>
   createTask: (
     documentId: string,
     document: Record<string, any>,
