@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react'
-import { SanityDocument, useSchema } from 'sanity'
-import Schema from '@sanity/schema'
-import { randomKey } from '@sanity/util/content'
+import {useMemo} from 'react'
+import {SanityDocument, useSchema} from 'sanity'
+import {randomKey} from '@sanity/util/content'
 import {
   ThemeProvider,
   ToastProvider,
@@ -14,10 +13,10 @@ import {
   Spinner,
 } from '@sanity/ui'
 
-import { TranslationContext } from './TranslationContext'
-import { TranslationView } from './TranslationView'
-import { useClient } from '../hooks/useClient'
-import { useSecrets } from '../hooks/useSecrets'
+import {TranslationContext} from './TranslationContext'
+import {TranslationView} from './TranslationView'
+import {useClient} from '../hooks/useClient'
+import {useSecrets} from '../hooks/useSecrets'
 import {
   Adapter,
   ExportForTranslation,
@@ -43,19 +42,20 @@ type TranslationTabProps = {
 }
 
 const TranslationTab = (props: TranslationTabProps) => {
-  const { displayed } = props.document
-  const ctx = {
-    client: useClient(),
-    schema: useSchema() as Schema,
-  }
+  const {displayed} = props.document
+  const client = useClient()
+  const schema = useSchema()
 
   const documentId =
-    displayed && displayed._id
-      ? (displayed._id.split('drafts.').pop() as string)
-      : ''
+    displayed && displayed._id ? (displayed._id.split('drafts.').pop() as string) : ''
 
-  const { errors, importTranslation, exportForTranslation } = useMemo(() => {
-    let allErrors = []
+  const {errors, importTranslation, exportForTranslation} = useMemo(() => {
+    const ctx = {
+      client,
+      schema,
+    }
+
+    const allErrors = []
 
     const importTranslationFunc = props.options.importTranslation
     if (!importTranslationFunc) {
@@ -63,24 +63,16 @@ const TranslationTab = (props: TranslationTabProps) => {
         key: randomKey(12),
         text: (
           <>
-            You need to provide an <code>importTranslation</code> function. See
-            documentation.
+            You need to provide an <code>importTranslation</code> function. See documentation.
           </>
         ),
       })
     }
 
-    const importTranslation = (localeId: string, doc: string) => {
+    const contextImportTranslation = (localeId: string, doc: string) => {
       const baseLanguage = props.options.baseLanguage
       const idStructure = props.options.idStructure
-      return importTranslationFunc(
-        documentId,
-        localeId,
-        doc,
-        ctx,
-        idStructure,
-        baseLanguage
-      )
+      return importTranslationFunc(documentId, localeId, doc, ctx, idStructure, baseLanguage)
     }
 
     const exportTranslationFunc = props.options.exportForTranslation
@@ -89,21 +81,24 @@ const TranslationTab = (props: TranslationTabProps) => {
         key: randomKey(12),
         text: (
           <>
-            You need to provide an <code>exportForTranslation</code> function.
-            See documentation.
+            You need to provide an <code>exportForTranslation</code> function. See documentation.
           </>
         ),
       })
     }
 
-    const exportForTranslation = (id: string) => {
+    const contextExportForTranslation = (id: string) => {
       return exportTranslationFunc(id, ctx)
     }
 
-    return { errors: allErrors, importTranslation, exportForTranslation }
-  }, [props.options, documentId, ctx])
+    return {
+      errors: allErrors,
+      importTranslation: contextImportTranslation,
+      exportForTranslation: contextExportForTranslation,
+    }
+  }, [props.options, documentId, client, schema])
 
-  const { loading, secrets } = useSecrets<Secrets>(
+  const {loading, secrets} = useSecrets<Secrets>(
     `${props.options.secretsNamespace || 'translationService'}.secrets`
   )
 
@@ -123,56 +118,48 @@ const TranslationTab = (props: TranslationTabProps) => {
         <Box padding={4}>
           <Card tone="caution" padding={[2, 3, 4, 4]} shadow={1} radius={2}>
             <Text>
-              Can't find secrets for your translation service. Did you load them
-              into this dataset?
+              Can't find secrets for your translation service. Did you load them into this dataset?
             </Text>
           </Card>
         </Box>
       </ThemeProvider>
     )
-  } else {
-    return (
-      <ThemeProvider>
-        <Box padding={4}>
-          <Layer>
-            <ToastProvider paddingY={7}>
-              {hasErrors && (
-                <Stack space={3}>
-                  {errors.map(error => (
-                    <Card
-                      key={error.key}
-                      tone="caution"
-                      padding={[2, 3, 4, 4]}
-                      shadow={1}
-                      radius={2}
-                    >
-                      <Text>{error.text}</Text>
-                    </Card>
-                  ))}
-                </Stack>
-              )}
-              {!hasErrors && (
-                <TranslationContext.Provider
-                  value={{
-                    documentId,
-                    secrets,
-                    importTranslation,
-                    exportForTranslation,
-                    adapter: props.options.adapter,
-                    baseLanguage: props.options.baseLanguage,
-                    workflowOptions: props.options.workflowOptions,
-                    localeIdAdapter: props.options.localeIdAdapter,
-                  }}
-                >
-                  <TranslationView />
-                </TranslationContext.Provider>
-              )}
-            </ToastProvider>
-          </Layer>
-        </Box>
-      </ThemeProvider>
-    )
   }
+  return (
+    <ThemeProvider>
+      <Box padding={4}>
+        <Layer>
+          <ToastProvider paddingY={7}>
+            {hasErrors && (
+              <Stack space={3}>
+                {errors.map((error) => (
+                  <Card key={error.key} tone="caution" padding={[2, 3, 4, 4]} shadow={1} radius={2}>
+                    <Text>{error.text}</Text>
+                  </Card>
+                ))}
+              </Stack>
+            )}
+            {!hasErrors && (
+              <TranslationContext.Provider
+                value={{
+                  documentId,
+                  secrets,
+                  importTranslation,
+                  exportForTranslation,
+                  adapter: props.options.adapter,
+                  baseLanguage: props.options.baseLanguage,
+                  workflowOptions: props.options.workflowOptions,
+                  localeIdAdapter: props.options.localeIdAdapter,
+                }}
+              >
+                <TranslationView />
+              </TranslationContext.Provider>
+            )}
+          </ToastProvider>
+        </Layer>
+      </Box>
+    </ThemeProvider>
+  )
 }
 
 export default TranslationTab

@@ -1,15 +1,14 @@
 /**
- * TODO!
  * Add cleanup function to cancel async tasks
  */
 
-import React, { useContext, useEffect, useState } from 'react'
-import { Stack, useToast } from '@sanity/ui'
-import { TranslationContext } from './TranslationContext'
+import {useCallback, useContext, useEffect, useState} from 'react'
+import {Stack, useToast} from '@sanity/ui'
+import {TranslationContext} from './TranslationContext'
 
-import { NewTask } from './NewTask'
-import { TaskView } from './TaskView'
-import { TranslationTask, TranslationLocale } from '../types'
+import {NewTask} from './NewTask'
+import {TaskView} from './TaskView'
+import {TranslationTask, TranslationLocale} from '../types'
 
 export const TranslationView = () => {
   const [locales, setLocales] = useState<TranslationLocale[]>([])
@@ -19,7 +18,7 @@ export const TranslationView = () => {
   const toast = useToast()
 
   useEffect(() => {
-    async function fetchData() {
+    function fetchData() {
       if (!context) {
         toast.push({
           title: 'Unable to load translation data: missing context',
@@ -32,14 +31,9 @@ export const TranslationView = () => {
       context.adapter
         .getLocales(context.secrets)
         .then(setLocales)
-        .then(() =>
-          context?.adapter.getTranslationTask(
-            context.documentId,
-            context.secrets
-          )
-        )
+        .then(() => context?.adapter.getTranslationTask(context.documentId, context.secrets))
         .then(setTask)
-        .catch(err => {
+        .catch((err) => {
           let errorMsg
           if (err instanceof Error) {
             errorMsg = err.message
@@ -59,18 +53,14 @@ export const TranslationView = () => {
     fetchData()
   }, [context, toast])
 
-  const refreshTask = async () => {
-    await context?.adapter
-      .getTranslationTask(context.documentId, context.secrets)
-      .then(setTask)
-  }
+  const refreshTask = useCallback(async () => {
+    await context?.adapter.getTranslationTask(context.documentId, context.secrets).then(setTask)
+  }, [context, setTask])
 
   return (
     <Stack space={6}>
       <NewTask locales={locales} refreshTask={refreshTask} />
-      {task && (
-        <TaskView task={task} locales={locales} refreshTask={refreshTask} />
-      )}
+      {task && <TaskView task={task} locales={locales} refreshTask={refreshTask} />}
     </Stack>
   )
 }

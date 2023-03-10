@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { Flex, Card, Text, Grid, Box, Button } from '@sanity/ui'
-import { DownloadIcon } from '@sanity/icons'
+import {useCallback, useState} from 'react'
+import {Flex, Card, Text, Grid, Box, Button} from '@sanity/ui'
+import {DownloadIcon} from '@sanity/icons'
 import ProgressBar from './ProgressBar'
 
 type LanguageStatusProps = {
@@ -9,18 +9,14 @@ type LanguageStatusProps = {
   importFile: () => Promise<void>
 }
 
-export const LanguageStatus = ({
-  title,
-  progress,
-  importFile,
-}: LanguageStatusProps) => {
+export const LanguageStatus = ({title, progress, importFile}: LanguageStatusProps) => {
   const [isBusy, setIsBusy] = useState(false)
 
-  const handleImport = async () => {
+  const handleImport = useCallback(async () => {
     setIsBusy(true)
     await importFile()
     setIsBusy(false)
-  }
+  }, [importFile, setIsBusy])
 
   return (
     <Card shadow={1}>
@@ -30,14 +26,14 @@ export const LanguageStatus = ({
             {title}
           </Text>
         </Flex>
-        {progress && progress > 0 ? (
+        {typeof progress === 'number' ? (
           <Flex columnStart={3} columnEnd={5} align="center">
             <ProgressBar progress={progress} />
           </Flex>
         ) : null}
         <Box columnStart={5} columnEnd={6}>
           <Button
-            style={{ width: `100%` }}
+            style={{width: `100%`}}
             mode="ghost"
             onClick={handleImport}
             text={isBusy ? 'Importing...' : 'Import'}
