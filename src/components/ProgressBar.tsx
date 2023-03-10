@@ -1,17 +1,13 @@
-import { Card, Flex, Label } from '@sanity/ui'
-import React from 'react'
+import {Card, Flex, Label} from '@sanity/ui'
 
-type ProgressBarProps = {
-  progress: number
-}
-
-export default function ProgressBar({ progress }: ProgressBarProps) {
-  if (!progress) {
+export default function ProgressBar({progress}: {progress: number}) {
+  if (typeof progress === 'undefined') {
+    console.warn('No progress prop passed to ProgressBar')
     return null
   }
 
   return (
-    <Card border radius={2} style={{ width: `100%`, position: `relative` }}>
+    <Card border radius={2} style={{width: `100%`, position: `relative`}}>
       <Flex
         style={{
           position: `absolute`,
@@ -36,7 +32,7 @@ export default function ProgressBar({ progress }: ProgressBarProps) {
         }}
         padding={2}
         tone="positive"
-      ></Card>
+      />
     </Card>
   )
 }

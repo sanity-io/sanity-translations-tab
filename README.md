@@ -53,8 +53,8 @@ export const getDefaultDocumentNode = ({schemaType}) => {
           workflowOptions: [
             {
               workflowUid: '123',
-              workflowName: 'Machine Translation (testing)'
-            }
+              workflowName: 'Machine Translation (testing)',
+            },
           ],
           /**
            * Optional sync or async function used on translation import to
@@ -68,8 +68,8 @@ export const getDefaultDocumentNode = ({schemaType}) => {
            * For field-level translations, the key for the "source content"
            *  (e.g. "en" or "en_US").
            */
-          baseLanguage: 'en_US'
-        })
+          baseLanguage: 'en_US',
+        }),
     ])
   }
 

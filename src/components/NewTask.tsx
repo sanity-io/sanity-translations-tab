@@ -1,19 +1,9 @@
-import React, { useState, useContext, ChangeEvent } from 'react'
+import React, {useState, useContext, ChangeEvent, useCallback} from 'react'
 import styled from 'styled-components'
-import {
-  Button,
-  Box,
-  Flex,
-  Grid,
-  Select,
-  Stack,
-  Switch,
-  Text,
-  useToast,
-} from '@sanity/ui'
+import {Button, Box, Flex, Grid, Select, Stack, Switch, Text, useToast} from '@sanity/ui'
 
-import { TranslationContext } from './TranslationContext'
-import { TranslationLocale } from '../types'
+import {TranslationContext} from './TranslationContext'
+import {TranslationLocale} from '../types'
 
 type Props = {
   locales: TranslationLocale[]
@@ -30,24 +20,24 @@ const WrapText = styled(Box)`
   white-space: normal;
 `
 
-const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
+const LocaleCheckbox = ({locale, toggle, checked}: LocaleCheckboxProps) => {
+  const onClick = useCallback(() => toggle(locale.localeId, !checked), [locale, toggle, checked])
+
   return (
     <Button
       mode="ghost"
-      onClick={() => {
-        toggle(locale.localeId, !checked)
-      }}
+      onClick={onClick}
       disabled={locale.enabled === false}
-      style={{ cursor: `pointer` }}
+      style={{cursor: `pointer`}}
       radius={2}
     >
       <Flex align="center" gap={3}>
         <Switch
-          style={{ pointerEvents: `none` }}
+          style={{pointerEvents: `none`}}
           disabled={locale.enabled === false}
           checked={checked}
-          //not needed because of above toggle logic, but silence React warnings.
-          onChange={() => {}}
+          //eslint-disable-next-line @typescript-eslint/no-empty-function
+          onChange={() => {}} // noop
         />
         <WrapText>
           <Text size={1} weight="semibold">
@@ -59,7 +49,7 @@ const LocaleCheckbox = ({ locale, toggle, checked }: LocaleCheckboxProps) => {
   )
 }
 
-export const NewTask = ({ locales, refreshTask }: Props) => {
+export const NewTask = ({locales, refreshTask}: Props) => {
   // Lets just stick to the canonical document id for keeping track of
   // translations
   const [selectedLocales, setSelectedLocales] = useState<React.ReactText[]>([])
@@ -69,15 +59,18 @@ export const NewTask = ({ locales, refreshTask }: Props) => {
   const context = useContext(TranslationContext)
   const toast = useToast()
 
-  const toggleLocale = (locale: string, selected: boolean) => {
-    if (!selected) {
-      setSelectedLocales(selectedLocales.filter(l => l !== locale))
-    } else if (!selectedLocales.includes(locale)) {
-      setSelectedLocales([...selectedLocales, locale])
-    }
-  }
+  const toggleLocale = useCallback(
+    (locale: string, selected: boolean) => {
+      if (!selected) {
+        setSelectedLocales(selectedLocales.filter((l) => l !== locale))
+      } else if (!selectedLocales.includes(locale)) {
+        setSelectedLocales([...selectedLocales, locale])
+      }
+    },
+    [selectedLocales, setSelectedLocales]
+  )
 
-  const createTask = async () => {
+  const createTask = useCallback(() => {
     if (!context) {
       toast.push({
         title: 'Unable to create task: missing context',
@@ -91,7 +84,7 @@ export const NewTask = ({ locales, refreshTask }: Props) => {
 
     context
       .exportForTranslation(context.documentId)
-      .then(serialized =>
+      .then((serialized) =>
         context.adapter.createTask(
           context.documentId,
           serialized,
@@ -114,7 +107,7 @@ export const NewTask = ({ locales, refreshTask }: Props) => {
         /** Update task data in TranslationView */
         refreshTask()
       })
-      .catch(err => {
+      .catch((err) => {
         let errorMsg
         if (err instanceof Error) {
           errorMsg = err.message
@@ -132,9 +125,33 @@ export const NewTask = ({ locales, refreshTask }: Props) => {
       .finally(() => {
         setIsBusy(false)
       })
-  }
+  }, [context, selectedLocales, selectedWorkflowUid, toast, refreshTask])
 
-  const possibleLocales = locales.filter(locale => locale.enabled !== false)
+  const possibleLocales = locales.filter((locale) => locale.enabled !== false)
+
+  const onClick = useCallback(() => {
+    setSelectedLocales(
+      possibleLocales.length === selectedLocales.length
+        ? // Disable all
+          []
+        : // Enable all
+          locales.filter((locale) => locale.enabled !== false).map((locale) => locale.localeId)
+    )
+  }, [possibleLocales, selectedLocales, setSelectedLocales, locales])
+
+  const onToggle = useCallback(
+    (locale: string, checked: boolean) => {
+      toggleLocale(locale, checked)
+    },
+    [toggleLocale]
+  )
+
+  const onWorkflowChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      setSelectedWorkflowUid(e.target.value)
+    },
+    [setSelectedWorkflowUid]
+  )
 
   return (
     <Stack paddingTop={4} space={4}>
@@ -147,30 +164,15 @@ export const NewTask = ({ locales, refreshTask }: Props) => {
             {possibleLocales.length === 1 ? `Select locale` : `Select locales`}
           </Text>
 
-          <Button
-            fontSize={1}
-            padding={2}
-            text="Toggle All"
-            onClick={() =>
-              setSelectedLocales(
-                possibleLocales.length === selectedLocales.length
-                  ? // Disable all
-                    []
-                  : // Enable all
-                    locales
-                      .filter(locale => locale.enabled !== false)
-                      .map(locale => locale.localeId)
-              )
-            }
-          />
+          <Button fontSize={1} padding={2} text="Toggle All" onClick={onClick} />
         </Flex>
 
         <Grid columns={[1, 1, 2, 3]} gap={1}>
-          {(locales || []).map(l => (
+          {(locales || []).map((l) => (
             <LocaleCheckbox
               key={l.localeId}
               locale={l}
-              toggle={(locale, checked) => toggleLocale(locale, checked)}
+              toggle={onToggle}
               checked={selectedLocales.includes(l.localeId)}
             />
           ))}
@@ -183,18 +185,10 @@ export const NewTask = ({ locales, refreshTask }: Props) => {
             Select translation workflow
           </Text>
           <Grid columns={[1, 1, 2]}>
-            <Select
-              id="workflowSelect"
-              onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                setSelectedWorkflowUid(e.target.value)
-              }}
-            >
+            <Select id="workflowSelect" onChange={onWorkflowChange}>
               <option>Default locale workflows</option>
-              {context.workflowOptions.map(w => (
-                <option
-                  key={`workflow-opt-${w.workflowUid}`}
-                  value={w.workflowUid}
-                >
+              {context.workflowOptions.map((w) => (
+                <option key={`workflow-opt-${w.workflowUid}`} value={w.workflowUid}>
                   {w.workflowName}
                 </option>
               ))}
