@@ -1,5 +1,4 @@
 import {SanityClient, SanityDocument, SanityDocumentLike} from 'sanity'
-
 import {
   BaseDocumentSerializer,
   BaseDocumentDeserializer,
@@ -11,27 +10,40 @@ import {DummyAdapter} from '../adapter'
 import {ExportForTranslation, ImportTranslation} from '../types'
 import {findLatestDraft, findDocumentAtRevision} from './utils'
 
+/*
+ * The new getI18nDoc function gets the IDs from the translation.metadata document
+ */
 const getI18nDoc = async (
   id: string,
   localeId: string,
-  client: SanityClient,
-  idStructure?: 'subpath' | 'delimiter'
+  client: SanityClient
+  //   idStructure?: 'subpath' | 'delimiter'
 ) => {
-  let doc: SanityDocument
-  if (idStructure === 'subpath') {
-    doc = await findLatestDraft(`i18n.${id}.${localeId}`, client)
-  } else {
-    doc = await findLatestDraft(`${id}__i18n_${localeId}`, client)
-    //await fallback for people who have not explicitly set this param
-    if (!idStructure && !doc) {
-      doc = await findLatestDraft(`i18n.${id}.${localeId}`, client)
-    }
-  }
+  //   let doc: SanityDocument
+
+  const translationDocumentId = await client.fetch(
+    "*[_type == 'translation.metadata' && translations[_key == 'en'][0].value._ref == $id][0].translations[_key == $localeId][0].value._ref",
+    {id, localeId}
+  )
+
+  const doc = await findLatestDraft(translationDocumentId, client)
+
+  //   if (idStructure === 'subpath') {
+  //     doc = await findLatestDraft(`i18n.${id}.${localeId}`, client)
+  //   } else {
+  //     doc = await findLatestDraft(`${id}__i18n_${localeId}`, client)
+  //     //await fallback for people who have not explicitly set this param
+  //     if (!idStructure && !doc) {
+  //       doc = await findLatestDraft(`i18n.${id}.${localeId}`, client)
+  //     }
+  //   }
 
   return doc
 }
 
-//document-level patch
+/*
+ * The new documentLevelPatch function makes sure the `language` field is not overwritten and passes fewer params to the get19nDoc function
+ */
 export const documentLevelPatch = async (
   documentId: string,
   translatedFields: SanityDocument,
@@ -41,7 +53,6 @@ export const documentLevelPatch = async (
 ): Promise<void> => {
   let baseDoc: SanityDocument
   if (translatedFields._id && translatedFields._rev) {
-    //eslint-disable-next-line no-use-before-define -- this is defined below
     baseDoc = await findDocumentAtRevision(translatedFields._id, translatedFields._rev, client)
   } else {
     baseDoc = await findLatestDraft(documentId, client)
@@ -52,14 +63,14 @@ export const documentLevelPatch = async (
     baseDoc
   ) as SanityDocumentLike
 
-  const i18nDoc = await getI18nDoc(documentId, localeId, client, idStructure)
+  const i18nDoc = await getI18nDoc(documentId, localeId, client)
   if (i18nDoc) {
     const cleanedMerge: Record<string, any> = {}
     //don't overwrite any existing system values on the i18n doc
     Object.entries(merged).forEach(([key, value]) => {
       if (
         Object.keys(translatedFields).includes(key) &&
-        !['_id', '_rev', '_updatedAt'].includes(key)
+        !['_id', '_rev', '_updatedAt', 'language'].includes(key)
       ) {
         cleanedMerge[key] = value
       }
