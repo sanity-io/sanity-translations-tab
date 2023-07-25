@@ -3,7 +3,7 @@ import {SanityClient, SanityDocument} from 'sanity'
 //document fetch
 export const findLatestDraft = (
   documentId: string,
-  client: SanityClient
+  client: SanityClient,
 ): Promise<SanityDocument> => {
   const query = `*[_id == $id || _id == $draftId]`
   const params = {id: documentId, draftId: `drafts.${documentId}`}

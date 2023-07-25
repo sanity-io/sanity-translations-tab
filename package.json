@@ -1,6 +1,6 @@
 {
   "name": "sanity-translations-tab",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "This is the base module for implementing common translation vendor tasks from a Studio, such as sending content to be translated in some specific languages, importing content back etc. Not useful on its own, but vendor-specific plugins will use this for its chrome.",
   "keywords": [
     "sanity",
@@ -17,6 +17,8 @@
   "license": "MIT",
   "author": "Sanity.io",
   "contributors": [
+    "carolina@sanity.io",
+    "tom@sanity.io",
     "annie@all-turtles.com",
     "kkuhnen@gala.games"
   ],
