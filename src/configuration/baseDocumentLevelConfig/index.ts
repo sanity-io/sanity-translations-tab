@@ -2,6 +2,7 @@ import {ExportForTranslation, ImportTranslation} from '../../types'
 import {SanityDocument} from 'sanity'
 import {findLatestDraft} from '../utils'
 import {documentLevelPatch} from './documentLevelPatch'
+import {legacyDocumentLevelPatch} from './legacyDocumentLevelPatch'
 import {
   SerializedDocument,
   BaseDocumentDeserializer,
@@ -31,3 +32,13 @@ export const baseDocumentLevelConfig = {
 }
 
 export {documentLevelPatch}
+
+export const legacyDocumentLevelConfig = {
+  ...baseDocumentLevelConfig,
+  importTranslation: async (...params: Parameters<ImportTranslation>): Promise<void> => {
+    const [id, localeId, document, context] = params
+    const {client} = context
+    const deserialized = BaseDocumentDeserializer.deserializeDocument(document) as SanityDocument
+    await legacyDocumentLevelPatch(id, deserialized, localeId, client)
+  },
+}
