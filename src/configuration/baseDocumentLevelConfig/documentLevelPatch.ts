@@ -7,7 +7,7 @@ import {
   getTranslationMetadata,
   createTranslationMetadata,
   patchI18nDoc,
-} from './utils'
+} from './helpers'
 
 export const documentLevelPatch = async (
   documentId: string,
@@ -44,14 +44,13 @@ export const documentLevelPatch = async (
    * if no metadata exists, we create it
    */
   let translationMetadata = await getTranslationMetadata(documentId, client, baseLanguage)
-  let i18nDocId
-  if (translationMetadata) {
-    i18nDocId = (translationMetadata.translations as Array<Record<string, any>>).find(
-      (translation) => translation._key === localeId,
-    )?.value?._ref
-  } else {
+  if (!translationMetadata) {
     translationMetadata = await createTranslationMetadata(documentId, client, baseLanguage)
   }
+
+  const i18nDocId = (translationMetadata.translations as Array<Record<string, any>>).find(
+    (translation) => translation._key === localeId,
+  )?.value?._ref
 
   //if we have a translated document, we patch it
   if (i18nDocId) {
