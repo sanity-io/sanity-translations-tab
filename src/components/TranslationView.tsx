@@ -28,30 +28,34 @@ export const TranslationView = () => {
         return
       }
 
-      context.adapter
-        .getLocales(context.secrets)
-        .then(setLocales)
-        .then(() => context?.adapter.getTranslationTask(context.documentId, context.secrets))
-        .then(setTask)
-        .catch((err) => {
-          let errorMsg
-          if (err instanceof Error) {
-            errorMsg = err.message
-          } else {
-            errorMsg = err ? String(err) : null
-          }
+      const {adapter, secrets, documentId} = context
+      const shouldFetch = adapter && secrets && documentId && !task
+      if (shouldFetch) {
+        adapter
+          .getLocales(secrets)
+          .then(setLocales)
+          .then(() => adapter.getTranslationTask(documentId, secrets))
+          .then(setTask)
+          .catch((err) => {
+            let errorMsg
+            if (err instanceof Error) {
+              errorMsg = err.message
+            } else {
+              errorMsg = err ? String(err) : null
+            }
 
-          toast.push({
-            title: `Error creating translation job`,
-            description: errorMsg,
-            status: 'error',
-            closable: true,
+            toast.push({
+              title: `Error fetching translation job`,
+              description: errorMsg,
+              status: 'error',
+              closable: true,
+            })
           })
-        })
+      }
     }
 
     fetchData()
-  }, [context, toast])
+  }, [context, toast, task])
 
   const refreshTask = useCallback(async () => {
     await context?.adapter.getTranslationTask(context.documentId, context.secrets).then(setTask)

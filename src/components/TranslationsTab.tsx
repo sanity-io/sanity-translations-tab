@@ -16,7 +16,7 @@ import {
 import {TranslationContext} from './TranslationContext'
 import {TranslationView} from './TranslationView'
 import {useClient} from '../hooks/useClient'
-import {useSecrets} from '../hooks/useSecrets'
+import {SettingsView, useSecrets} from '@sanity/studio-secrets'
 import {
   Adapter,
   ExportForTranslation,
@@ -98,9 +98,11 @@ const TranslationTab = (props: TranslationTabProps) => {
     }
   }, [props.options, documentId, client, schema])
 
-  const {loading, secrets} = useSecrets<Secrets>(
-    `${props.options.secretsNamespace || 'translationService'}.secrets`
-  )
+  const namespace = props.options.secretsNamespace || 'translationService'
+  //eslint-disable-next-line no-array-constructor
+  const secretsKeys = Array<keyof Secrets>().map((key) => ({title: key, key}))
+
+  const {loading, secrets} = useSecrets<Secrets>(namespace)
 
   const hasErrors = errors.length > 0
 
@@ -117,9 +119,13 @@ const TranslationTab = (props: TranslationTabProps) => {
       <ThemeProvider>
         <Box padding={4}>
           <Card tone="caution" padding={[2, 3, 4, 4]} shadow={1} radius={2}>
-            <Text>
-              Can't find secrets for your translation service. Did you load them into this dataset?
-            </Text>
+            <SettingsView
+              title={'Please configure the translation plugin'}
+              namespace={namespace}
+              keys={secretsKeys}
+              //eslint-disable-next-line
+              onClose={() => {}}
+            />
           </Card>
         </Box>
       </ThemeProvider>
