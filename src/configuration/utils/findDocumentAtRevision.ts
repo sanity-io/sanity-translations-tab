@@ -4,7 +4,7 @@ import {SanityClient, SanityDocument} from 'sanity'
 export const findDocumentAtRevision = async (
   documentId: string,
   rev: string,
-  client: SanityClient
+  client: SanityClient,
 ): Promise<SanityDocument> => {
   const dataset = client.config().dataset
   const baseUrl = `/data/history/${dataset}/documents/${documentId}?revision=${rev}`
