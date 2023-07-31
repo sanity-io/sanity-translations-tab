@@ -9,6 +9,8 @@ import {
 } from './types'
 import {
   baseDocumentLevelConfig,
+  legacyDocumentLevelConfig,
+  legacyDocumentLevelPatch,
   baseFieldLevelConfig,
   findLatestDraft,
   documentLevelPatch,
@@ -28,9 +30,11 @@ export {
   DummyAdapter,
   //helpers for setting up easy, standard configuration across different translation vendors
   baseDocumentLevelConfig,
+  legacyDocumentLevelConfig,
   baseFieldLevelConfig,
   //helpers for end developers who may need to customize serialization
   findLatestDraft,
+  legacyDocumentLevelPatch,
   documentLevelPatch,
   fieldLevelPatch,
   BaseDocumentSerializer,

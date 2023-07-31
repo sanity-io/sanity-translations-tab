@@ -31,8 +31,6 @@ export const baseDocumentLevelConfig = {
   secretsNamespace: 'translationService',
 }
 
-export {documentLevelPatch}
-
 export const legacyDocumentLevelConfig = {
   ...baseDocumentLevelConfig,
   importTranslation: async (...params: Parameters<ImportTranslation>): Promise<void> => {
@@ -42,3 +40,5 @@ export const legacyDocumentLevelConfig = {
     await legacyDocumentLevelPatch(id, deserialized, localeId, client)
   },
 }
+
+export {documentLevelPatch, legacyDocumentLevelPatch}
