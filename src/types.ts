@@ -44,7 +44,7 @@ export interface Adapter {
     document: Record<string, any>,
     localeIds: string[],
     secrets: Secrets | null,
-    workflowUid?: string
+    workflowUid?: string,
   ) => Promise<TranslationTask>
   getTranslation: (taskid: string, localeId: string, secrets: Secrets | null) => Promise<any | null>
 }
@@ -56,7 +56,7 @@ export interface TranslationFunctionContext {
 
 export type ExportForTranslation = (
   id: string,
-  context: TranslationFunctionContext
+  context: TranslationFunctionContext,
 ) => Promise<SerializedDocument>
 
 export type ImportTranslation = (
@@ -64,6 +64,5 @@ export type ImportTranslation = (
   localeId: string,
   document: string,
   context: TranslationFunctionContext,
-  idStructure?: 'subpath' | 'delimiter',
-  baseLanguage?: string
+  baseLanguage?: string,
 ) => Promise<void>

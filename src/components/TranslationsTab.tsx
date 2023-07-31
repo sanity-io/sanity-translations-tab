@@ -35,7 +35,6 @@ type TranslationTabProps = {
     secretsNamespace: string | null
     exportForTranslation: ExportForTranslation
     importTranslation: ImportTranslation
-    idStructure?: 'subpath' | 'delimiter'
     workflowOptions?: WorkflowIdentifiers[]
     localeIdAdapter?: (id: string) => string
   }
@@ -71,8 +70,7 @@ const TranslationTab = (props: TranslationTabProps) => {
 
     const contextImportTranslation = (localeId: string, doc: string) => {
       const baseLanguage = props.options.baseLanguage
-      const idStructure = props.options.idStructure
-      return importTranslationFunc(documentId, localeId, doc, ctx, idStructure, baseLanguage)
+      return importTranslationFunc(documentId, localeId, doc, ctx, baseLanguage)
     }
 
     const exportTranslationFunc = props.options.exportForTranslation
