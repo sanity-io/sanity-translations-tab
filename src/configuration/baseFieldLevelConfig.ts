@@ -15,7 +15,7 @@ export const fieldLevelPatch = async (
   translatedFields: SanityDocument,
   localeId: string,
   client: SanityClient,
-  baseLanguage: string = 'en'
+  baseLanguage: string = 'en',
 ): Promise<void> => {
   let baseDoc: SanityDocument
   if (translatedFields._rev && translatedFields._id) {
@@ -28,7 +28,7 @@ export const fieldLevelPatch = async (
     translatedFields,
     baseDoc,
     localeId,
-    baseLanguage
+    baseLanguage,
   )
 
   await client.patch(baseDoc._id).set(merged).commit()
