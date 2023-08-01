@@ -54,7 +54,9 @@ export const documentLevelPatch = async (
 
   //if we have a translated document, we patch it
   if (i18nDocId) {
-    patchI18nDoc(i18nDocId, merged, translatedFields, client)
+    //get draft or published
+    const i18nDoc = await findLatestDraft(i18nDocId, client)
+    patchI18nDoc(i18nDoc._id, merged, translatedFields, client)
   }
   //otherwise, create a new document
   //and add the document reference to the metadata document

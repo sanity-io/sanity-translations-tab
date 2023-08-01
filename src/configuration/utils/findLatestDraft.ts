@@ -1,6 +1,6 @@
 import {SanityClient, SanityDocument} from 'sanity'
 
-//document fetch
+//use perspectives in the future
 export const findLatestDraft = (
   documentId: string,
   client: SanityClient,
