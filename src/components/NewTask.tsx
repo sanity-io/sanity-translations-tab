@@ -67,7 +67,7 @@ export const NewTask = ({locales, refreshTask}: Props) => {
         setSelectedLocales([...selectedLocales, locale])
       }
     },
-    [selectedLocales, setSelectedLocales]
+    [selectedLocales, setSelectedLocales],
   )
 
   const createTask = useCallback(() => {
@@ -90,8 +90,8 @@ export const NewTask = ({locales, refreshTask}: Props) => {
           serialized,
           selectedLocales as string[],
           context.secrets,
-          selectedWorkflowUid
-        )
+          selectedWorkflowUid,
+        ),
       )
       .then(() => {
         toast.push({
@@ -135,7 +135,7 @@ export const NewTask = ({locales, refreshTask}: Props) => {
         ? // Disable all
           []
         : // Enable all
-          locales.filter((locale) => locale.enabled !== false).map((locale) => locale.localeId)
+          locales.filter((locale) => locale.enabled !== false).map((locale) => locale.localeId),
     )
   }, [possibleLocales, selectedLocales, setSelectedLocales, locales])
 
@@ -143,14 +143,14 @@ export const NewTask = ({locales, refreshTask}: Props) => {
     (locale: string, checked: boolean) => {
       toggleLocale(locale, checked)
     },
-    [toggleLocale]
+    [toggleLocale],
   )
 
   const onWorkflowChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       setSelectedWorkflowUid(e.target.value)
     },
-    [setSelectedWorkflowUid]
+    [setSelectedWorkflowUid],
   )
 
   return (

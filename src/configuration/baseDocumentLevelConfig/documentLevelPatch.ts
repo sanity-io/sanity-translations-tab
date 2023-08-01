@@ -16,7 +16,7 @@ export const documentLevelPatch = async (
   client: SanityClient,
   baseLanguage: string = 'en',
 ): Promise<void> => {
-  let baseDoc: SanityDocument
+  let baseDoc: SanityDocument | null = null
 
   /*
    * we send over the _rev with our translation file so we can
@@ -25,10 +25,10 @@ export const documentLevelPatch = async (
    */
   if (translatedFields._id && translatedFields._rev) {
     baseDoc = await findDocumentAtRevision(translatedFields._id, translatedFields._rev, client)
-  } else {
+  }
+  if (!baseDoc) {
     baseDoc = await findLatestDraft(documentId, client)
   }
-
   /*
    * we then merge the translation with the base document
    * to create a document that contains the translation and everything

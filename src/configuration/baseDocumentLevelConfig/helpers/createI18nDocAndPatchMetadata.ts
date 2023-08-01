@@ -7,7 +7,9 @@ export const createI18nDocAndPatchMetadata = (
   translationMetadataId: string,
 ): void => {
   translatedDoc.language = localeId
-  client.create(translatedDoc).then((doc) => {
+  //remove system fields
+  const {_id, _rev, _updatedAt, _createdAt, ...rest} = translatedDoc
+  client.create(rest).then((doc) => {
     client
       .transaction()
       .patch(translationMetadataId, (p) =>

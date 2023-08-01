@@ -40,7 +40,7 @@ export const TaskView = ({task, locales, refreshTask}: JobProps) => {
         const translation = await context.adapter.getTranslation(
           task.taskId,
           localeId,
-          context.secrets
+          context.secrets,
         )
 
         const sanityId = context.localeIdAdapter
@@ -70,7 +70,7 @@ export const TaskView = ({task, locales, refreshTask}: JobProps) => {
         })
       }
     },
-    [locales, context, task.taskId, toast]
+    [locales, context, task.taskId, toast],
   )
 
   const handleRefreshClick = useCallback(async () => {

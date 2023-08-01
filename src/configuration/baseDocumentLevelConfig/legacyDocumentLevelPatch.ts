@@ -9,7 +9,7 @@ export const legacyDocumentLevelPatch = async (
   localeId: string,
   client: SanityClient,
 ): Promise<void> => {
-  let baseDoc: SanityDocument
+  let baseDoc: SanityDocument | null = null
 
   /*
    * we send over the _rev with our translation file so we can
@@ -18,7 +18,8 @@ export const legacyDocumentLevelPatch = async (
    */
   if (translatedFields._id && translatedFields._rev) {
     baseDoc = await findDocumentAtRevision(translatedFields._id, translatedFields._rev, client)
-  } else {
+  }
+  if (!baseDoc) {
     baseDoc = await findLatestDraft(documentId, client)
   }
 
