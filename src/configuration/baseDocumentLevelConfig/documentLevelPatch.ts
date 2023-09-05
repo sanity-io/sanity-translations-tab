@@ -61,6 +61,6 @@ export const documentLevelPatch = async (
   //otherwise, create a new document
   //and add the document reference to the metadata document
   else if (translationMetadata) {
-    createI18nDocAndPatchMetadata(merged, localeId, client, translationMetadata._id)
+    createI18nDocAndPatchMetadata(merged, localeId, client, translationMetadata)
   }
 }
