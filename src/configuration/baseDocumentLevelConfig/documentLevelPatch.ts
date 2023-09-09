@@ -45,7 +45,7 @@ export const documentLevelPatch = async (
    */
   let translationMetadata = await getTranslationMetadata(documentId, client, baseLanguage)
   if (!translationMetadata) {
-    translationMetadata = await createTranslationMetadata(documentId, client, baseLanguage)
+    translationMetadata = await createTranslationMetadata(baseDoc, client, baseLanguage)
   }
 
   const i18nDocId = (translationMetadata.translations as Array<Record<string, any>>).find(

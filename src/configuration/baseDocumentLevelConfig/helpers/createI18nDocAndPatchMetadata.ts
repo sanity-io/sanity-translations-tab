@@ -22,12 +22,12 @@ export const createI18nDocAndPatchMetadata = (
         p.insert(operation, location, [
           {
             _key: localeId,
+            _type: 'internationalizedArrayReferenceValue',
             value: {
               _type: 'reference',
               _ref,
               _weak: true,
               _strengthenOnPublish: {
-                _weak: false,
                 type: doc._type,
               },
             },

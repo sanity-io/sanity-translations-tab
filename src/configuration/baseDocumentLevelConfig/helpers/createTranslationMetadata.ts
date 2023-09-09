@@ -1,20 +1,38 @@
-import {SanityClient, SanityDocumentLike} from 'sanity'
+import {KeyedObject, Reference, SanityClient, SanityDocumentLike} from 'sanity'
+
+type TranslationReference = KeyedObject & {
+  _type: 'internationalizedArrayReferenceValue'
+  value: Reference
+}
 
 export const createTranslationMetadata = (
-  documentId: string,
+  document: SanityDocumentLike,
   client: SanityClient,
   baseLanguage: string,
 ): Promise<SanityDocumentLike> => {
+  const baseLangEntry: TranslationReference = {
+    _key: baseLanguage,
+    _type: 'internationalizedArrayReferenceValue',
+    value: {
+      _type: 'reference',
+      _ref: document._id.replace('drafts.', ''),
+    },
+  }
+
+  if (document._id.startsWith('drafts.')) {
+    baseLangEntry.value = {
+      ...baseLangEntry.value,
+      _weak: true,
+      //this should reflect doc i18n config when this
+      //plugin is able to take that as a config option
+      _strengthenOnPublish: {
+        type: document._type,
+      },
+    }
+  }
+
   return client.create({
     _type: 'translation.metadata',
-    translations: [
-      {
-        _key: baseLanguage,
-        value: {
-          _type: 'reference',
-          _ref: documentId,
-        },
-      },
-    ],
+    translations: [baseLangEntry],
   })
 }
