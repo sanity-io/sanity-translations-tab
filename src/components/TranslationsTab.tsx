@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {SanityDocument, useSchema} from 'sanity'
+import {SanityDocument, TypedObject, useSchema} from 'sanity'
 import {randomKey} from '@sanity/util/content'
 import {
   ThemeProvider,
@@ -35,6 +35,10 @@ type TranslationTabProps = {
     secretsNamespace: string | null
     exportForTranslation: ExportForTranslation
     importTranslation: ImportTranslation
+    additionalStopTypes?: string[]
+    additionalSerializers?: Record<string, (value: TypedObject) => string>
+    additionalDeserializers?: Record<string, (value: HTMLElement) => TypedObject>
+    additionalBlockDeserializers?: any[]
     workflowOptions?: WorkflowIdentifiers[]
     localeIdAdapter?: (id: string) => string
   }
@@ -49,6 +53,13 @@ const TranslationTab = (props: TranslationTabProps) => {
     displayed && displayed._id ? (displayed._id.split('drafts.').pop() as string) : ''
 
   const {errors, importTranslation, exportForTranslation} = useMemo(() => {
+    const {
+      additionalStopTypes,
+      additionalSerializers,
+      additionalDeserializers,
+      additionalBlockDeserializers,
+      baseLanguage,
+    } = props.options
     const ctx = {
       client,
       schema,
@@ -69,8 +80,15 @@ const TranslationTab = (props: TranslationTabProps) => {
     }
 
     const contextImportTranslation = (localeId: string, doc: string) => {
-      const baseLanguage = props.options.baseLanguage
-      return importTranslationFunc(documentId, localeId, doc, ctx, baseLanguage)
+      return importTranslationFunc(
+        documentId,
+        localeId,
+        doc,
+        ctx,
+        baseLanguage,
+        additionalDeserializers,
+        additionalBlockDeserializers,
+      )
     }
 
     const exportTranslationFunc = props.options.exportForTranslation
@@ -86,7 +104,13 @@ const TranslationTab = (props: TranslationTabProps) => {
     }
 
     const contextExportForTranslation = (id: string) => {
-      return exportTranslationFunc(id, ctx)
+      return exportTranslationFunc(
+        id,
+        ctx,
+        baseLanguage,
+        additionalStopTypes,
+        additionalSerializers,
+      )
     }
 
     return {
