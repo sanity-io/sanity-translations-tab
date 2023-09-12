@@ -6,6 +6,7 @@ import {
   ExportForTranslation,
   ImportTranslation,
   TranslationFunctionContext,
+  TranslationsTabConfigOptions,
 } from './types'
 import {
   baseDocumentLevelConfig,
@@ -24,7 +25,14 @@ import {
   customSerializers,
 } from 'sanity-naive-html-serializer'
 
-export type {Secrets, Adapter, ExportForTranslation, ImportTranslation, TranslationFunctionContext}
+export type {
+  Secrets,
+  Adapter,
+  ExportForTranslation,
+  ImportTranslation,
+  TranslationFunctionContext,
+  TranslationsTabConfigOptions,
+}
 export {
   TranslationsTab,
   DummyAdapter,

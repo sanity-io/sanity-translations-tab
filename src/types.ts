@@ -1,5 +1,7 @@
 import {SanityClient, Schema, TypedObject} from 'sanity'
 import {SerializedDocument} from 'sanity-naive-html-serializer'
+import {PortableTextTypeComponent} from '@portabletext/to-html'
+import {DeserializerRule} from '@sanity/block-tools'
 
 export type TranslationTaskLocaleStatus = {
   localeId: string
@@ -60,7 +62,7 @@ export type ExportForTranslation = (
   baseLanguage?: string,
   serializationOptions?: {
     additionalStopTypes?: string[]
-    additionalSerializers?: Record<string, (value: TypedObject) => string>
+    additionalSerializers?: Record<string, PortableTextTypeComponent | undefined>
   },
   languageField?: string,
 ) => Promise<SerializedDocument>
@@ -73,7 +75,24 @@ export type ImportTranslation = (
   baseLanguage?: string,
   serializationOptions?: {
     additionalDeserializers?: Record<string, (value: HTMLElement) => TypedObject>
-    additionalBlockDeserializers?: any[]
+    additionalBlockDeserializers?: DeserializerRule[]
   },
   languageField?: string,
 ) => Promise<void>
+
+export type TranslationsTabConfigOptions = {
+  adapter: Adapter
+  baseLanguage: string
+  secretsNamespace: string | null
+  exportForTranslation: ExportForTranslation
+  importTranslation: ImportTranslation
+  serializationOptions?: {
+    additionalStopTypes?: string[]
+    additionalSerializers?: Record<string, PortableTextTypeComponent | undefined>
+    additionalDeserializers?: Record<string, (value: HTMLElement) => TypedObject>
+    additionalBlockDeserializers?: DeserializerRule[]
+  }
+  workflowOptions?: WorkflowIdentifiers[]
+  localeIdAdapter?: (id: string) => string
+  languageField?: string
+}

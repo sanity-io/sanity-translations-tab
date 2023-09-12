@@ -75,6 +75,7 @@ export const baseDocumentLevelConfig = {
   },
   adapter: DummyAdapter,
   secretsNamespace: 'translationService',
+  baseLanguage: 'en',
 }
 
 export const legacyDocumentLevelConfig = {

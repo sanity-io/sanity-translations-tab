@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {SanityDocument, TypedObject, useSchema} from 'sanity'
+import {SanityDocument, useSchema} from 'sanity'
 import {randomKey} from '@sanity/util/content'
 import {
   ThemeProvider,
@@ -17,34 +17,13 @@ import {TranslationContext} from './TranslationContext'
 import {TranslationView} from './TranslationView'
 import {useClient} from '../hooks/useClient'
 import {useSecrets} from '../hooks/useSecrets'
-import {
-  Adapter,
-  ExportForTranslation,
-  ImportTranslation,
-  Secrets,
-  WorkflowIdentifiers,
-} from '../types'
+import {Secrets, TranslationsTabConfigOptions} from '../types'
 
 type TranslationTabProps = {
   document: {
     displayed: SanityDocument
   }
-  options: {
-    adapter: Adapter
-    baseLanguage: string
-    secretsNamespace: string | null
-    exportForTranslation: ExportForTranslation
-    importTranslation: ImportTranslation
-    serializationOptions?: {
-      additionalStopTypes?: string[]
-      additionalSerializers?: Record<string, (value: TypedObject) => string>
-      additionalDeserializers?: Record<string, (value: HTMLElement) => TypedObject>
-      additionalBlockDeserializers?: any[]
-    }
-    workflowOptions?: WorkflowIdentifiers[]
-    localeIdAdapter?: (id: string) => string
-    languageField?: string
-  }
+  options: TranslationsTabConfigOptions
 }
 
 const TranslationTab = (props: TranslationTabProps) => {

@@ -84,4 +84,5 @@ export const baseFieldLevelConfig = {
   },
   adapter: DummyAdapter,
   secretsNamespace: 'translationService',
+  baseLanguage: 'en',
 }
