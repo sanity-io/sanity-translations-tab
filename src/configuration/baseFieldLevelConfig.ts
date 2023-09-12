@@ -41,15 +41,14 @@ export const baseFieldLevelConfig = {
   exportForTranslation: async (
     ...params: Parameters<ExportForTranslation>
   ): Promise<SerializedDocument> => {
-    const [id, context, baseLanguage = 'en', additionalStopTypes = [], additionalSerializers = {}] =
-      params
+    const [id, context, baseLanguage = 'en', serializationOptions = {}] = params
     const {client, schema} = context
-    const stopTypes = [...additionalStopTypes, ...defaultStopTypes]
+    const stopTypes = [...(serializationOptions.additionalStopTypes ?? []), ...defaultStopTypes]
     const serializers = {
       ...customSerializers,
       types: {
         ...customSerializers.types,
-        ...additionalSerializers,
+        ...(serializationOptions.additionalSerializers ?? {}),
       },
     }
     const doc = await findLatestDraft(id, client)
@@ -64,22 +63,17 @@ export const baseFieldLevelConfig = {
     return serialized
   },
   importTranslation: (...params: Parameters<ImportTranslation>): Promise<void> => {
-    const [
-      id,
-      localeId,
-      document,
-      context,
-      baseLanguage = 'en',
-      additionalDeserializers = {},
-      additionalBlockDeserializers = [],
-    ] = params
+    const [id, localeId, document, context, baseLanguage = 'en', serializationOptions = {}] = params
     const {client} = context
     const deserializers = {
       types: {
-        ...additionalDeserializers,
+        ...(serializationOptions.additionalDeserializers ?? {}),
       },
     }
-    const blockDeserializers = [...additionalBlockDeserializers, ...customBlockDeserializers]
+    const blockDeserializers = [
+      ...(serializationOptions.additionalBlockDeserializers ?? []),
+      ...customBlockDeserializers,
+    ]
 
     const deserialized = BaseDocumentDeserializer.deserializeDocument(
       document,

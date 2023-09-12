@@ -35,10 +35,12 @@ type TranslationTabProps = {
     secretsNamespace: string | null
     exportForTranslation: ExportForTranslation
     importTranslation: ImportTranslation
-    additionalStopTypes?: string[]
-    additionalSerializers?: Record<string, (value: TypedObject) => string>
-    additionalDeserializers?: Record<string, (value: HTMLElement) => TypedObject>
-    additionalBlockDeserializers?: any[]
+    serializationOptions?: {
+      additionalStopTypes?: string[]
+      additionalSerializers?: Record<string, (value: TypedObject) => string>
+      additionalDeserializers?: Record<string, (value: HTMLElement) => TypedObject>
+      additionalBlockDeserializers?: any[]
+    }
     workflowOptions?: WorkflowIdentifiers[]
     localeIdAdapter?: (id: string) => string
     languageField?: string
@@ -54,14 +56,7 @@ const TranslationTab = (props: TranslationTabProps) => {
     displayed && displayed._id ? (displayed._id.split('drafts.').pop() as string) : ''
 
   const {errors, importTranslation, exportForTranslation} = useMemo(() => {
-    const {
-      additionalStopTypes,
-      additionalSerializers,
-      additionalDeserializers,
-      additionalBlockDeserializers,
-      baseLanguage,
-      languageField,
-    } = props.options
+    const {serializationOptions, baseLanguage, languageField} = props.options
     const ctx = {
       client,
       schema,
@@ -88,8 +83,7 @@ const TranslationTab = (props: TranslationTabProps) => {
         doc,
         ctx,
         baseLanguage,
-        additionalDeserializers,
-        additionalBlockDeserializers,
+        serializationOptions,
         languageField,
       )
     }
@@ -107,14 +101,7 @@ const TranslationTab = (props: TranslationTabProps) => {
     }
 
     const contextExportForTranslation = (id: string) => {
-      return exportTranslationFunc(
-        id,
-        ctx,
-        baseLanguage,
-        additionalStopTypes,
-        additionalSerializers,
-        languageField,
-      )
+      return exportTranslationFunc(id, ctx, baseLanguage, serializationOptions, languageField)
     }
 
     return {

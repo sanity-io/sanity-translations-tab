@@ -21,17 +21,16 @@ export const baseDocumentLevelConfig = {
       id,
       context,
       baseLanguage = 'en',
-      additionalStopTypes = [],
-      additionalSerializers = {},
+      serializationOptions = {},
       languageField = 'language',
     ] = params
     const {client, schema} = context
-    const stopTypes = [...additionalStopTypes, ...defaultStopTypes]
+    const stopTypes = [...(serializationOptions.additionalStopTypes ?? []), ...defaultStopTypes]
     const serializers = {
       ...customSerializers,
       types: {
         ...customSerializers.types,
-        ...additionalSerializers,
+        ...(serializationOptions.additionalSerializers ?? {}),
       },
     }
     const doc = await findLatestDraft(id, client)
@@ -53,17 +52,19 @@ export const baseDocumentLevelConfig = {
       document,
       context,
       baseLanguage = 'en',
-      additionalDeserializers = {},
-      additionalBlockDeserializers = [],
+      serializationOptions = {},
       languageField = 'language',
     ] = params
     const {client} = context
     const deserializers = {
       types: {
-        ...additionalDeserializers,
+        ...(serializationOptions.additionalDeserializers ?? {}),
       },
     }
-    const blockDeserializers = [...additionalBlockDeserializers, ...customBlockDeserializers]
+    const blockDeserializers = [
+      ...(serializationOptions.additionalBlockDeserializers ?? []),
+      ...customBlockDeserializers,
+    ]
 
     const deserialized = BaseDocumentDeserializer.deserializeDocument(
       document,
@@ -79,22 +80,17 @@ export const baseDocumentLevelConfig = {
 export const legacyDocumentLevelConfig = {
   ...baseDocumentLevelConfig,
   importTranslation: (...params: Parameters<ImportTranslation>): Promise<void> => {
-    const [
-      id,
-      localeId,
-      document,
-      context,
-      ,
-      additionalDeserializers = {},
-      additionalBlockDeserializers = [],
-    ] = params
+    const [id, localeId, document, context, , serializationOptions = {}] = params
     const {client} = context
     const deserializers = {
       types: {
-        ...additionalDeserializers,
+        ...(serializationOptions.additionalDeserializers ?? {}),
       },
     }
-    const blockDeserializers = [...additionalBlockDeserializers, ...customBlockDeserializers]
+    const blockDeserializers = [
+      ...(serializationOptions.additionalBlockDeserializers ?? []),
+      ...customBlockDeserializers,
+    ]
 
     const deserialized = BaseDocumentDeserializer.deserializeDocument(
       document,
