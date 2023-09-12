@@ -60,6 +60,7 @@ export type ExportForTranslation = (
   baseLanguage?: string,
   additionalStopTypes?: string[],
   additionalSerializers?: Record<string, (value: TypedObject) => string>,
+  languageField?: string,
 ) => Promise<SerializedDocument>
 
 export type ImportTranslation = (
@@ -70,4 +71,5 @@ export type ImportTranslation = (
   baseLanguage?: string,
   additionalDeserializers?: Record<string, (value: HTMLElement) => TypedObject>,
   additionalBlockDeserializers?: any[],
+  languageField?: string,
 ) => Promise<void>

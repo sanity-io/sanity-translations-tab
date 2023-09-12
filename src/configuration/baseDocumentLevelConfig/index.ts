@@ -17,8 +17,14 @@ export const baseDocumentLevelConfig = {
   exportForTranslation: async (
     ...params: Parameters<ExportForTranslation>
   ): Promise<SerializedDocument> => {
-    const [id, context, baseLanguage = 'en', additionalStopTypes = [], additionalSerializers = {}] =
-      params
+    const [
+      id,
+      context,
+      baseLanguage = 'en',
+      additionalStopTypes = [],
+      additionalSerializers = {},
+      languageField = 'language',
+    ] = params
     const {client, schema} = context
     const stopTypes = [...additionalStopTypes, ...defaultStopTypes]
     const serializers = {
@@ -29,6 +35,7 @@ export const baseDocumentLevelConfig = {
       },
     }
     const doc = await findLatestDraft(id, client)
+    delete doc[languageField]
     const serialized = BaseDocumentSerializer(schema).serializeDocument(
       doc,
       'document',
@@ -48,6 +55,7 @@ export const baseDocumentLevelConfig = {
       baseLanguage = 'en',
       additionalDeserializers = {},
       additionalBlockDeserializers = [],
+      languageField = 'language',
     ] = params
     const {client} = context
     const deserializers = {
@@ -62,7 +70,7 @@ export const baseDocumentLevelConfig = {
       deserializers,
       blockDeserializers,
     ) as SanityDocument
-    return documentLevelPatch(id, deserialized, localeId, client, baseLanguage)
+    return documentLevelPatch(id, deserialized, localeId, client, baseLanguage, languageField)
   },
   adapter: DummyAdapter,
   secretsNamespace: 'translationService',

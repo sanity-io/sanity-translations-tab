@@ -5,8 +5,9 @@ export const createI18nDocAndPatchMetadata = (
   localeId: string,
   client: SanityClient,
   translationMetadata: SanityDocumentLike,
+  languageField: string = 'language',
 ): void => {
-  translatedDoc.language = localeId
+  translatedDoc[languageField] = localeId
   const translations = translationMetadata.translations as Record<string, any>[]
   const existingLocaleKey = translations.find((translation) => translation._key === localeId)
   const operation = existingLocaleKey ? 'replace' : 'after'

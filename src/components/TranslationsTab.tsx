@@ -41,6 +41,7 @@ type TranslationTabProps = {
     additionalBlockDeserializers?: any[]
     workflowOptions?: WorkflowIdentifiers[]
     localeIdAdapter?: (id: string) => string
+    languageField?: string
   }
 }
 
@@ -59,6 +60,7 @@ const TranslationTab = (props: TranslationTabProps) => {
       additionalDeserializers,
       additionalBlockDeserializers,
       baseLanguage,
+      languageField,
     } = props.options
     const ctx = {
       client,
@@ -88,6 +90,7 @@ const TranslationTab = (props: TranslationTabProps) => {
         baseLanguage,
         additionalDeserializers,
         additionalBlockDeserializers,
+        languageField,
       )
     }
 
@@ -110,6 +113,7 @@ const TranslationTab = (props: TranslationTabProps) => {
         baseLanguage,
         additionalStopTypes,
         additionalSerializers,
+        languageField,
       )
     }
 
