@@ -53,6 +53,8 @@
     "watch": "pkg-utils watch --strict"
   },
   "dependencies": {
+    "@portabletext/to-html": "^2.0.3",
+    "@sanity/block-tools": "^3.16.4",
     "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/ui": "^1",
     "@sanity/util": "^3.16.4",
