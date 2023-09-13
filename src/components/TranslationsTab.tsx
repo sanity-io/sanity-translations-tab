@@ -17,27 +17,13 @@ import {TranslationContext} from './TranslationContext'
 import {TranslationView} from './TranslationView'
 import {useClient} from '../hooks/useClient'
 import {useSecrets} from '../hooks/useSecrets'
-import {
-  Adapter,
-  ExportForTranslation,
-  ImportTranslation,
-  Secrets,
-  WorkflowIdentifiers,
-} from '../types'
+import {Secrets, TranslationsTabConfigOptions} from '../types'
 
 type TranslationTabProps = {
   document: {
     displayed: SanityDocument
   }
-  options: {
-    adapter: Adapter
-    baseLanguage: string
-    secretsNamespace: string | null
-    exportForTranslation: ExportForTranslation
-    importTranslation: ImportTranslation
-    workflowOptions?: WorkflowIdentifiers[]
-    localeIdAdapter?: (id: string) => string
-  }
+  options: TranslationsTabConfigOptions
 }
 
 const TranslationTab = (props: TranslationTabProps) => {
@@ -49,6 +35,7 @@ const TranslationTab = (props: TranslationTabProps) => {
     displayed && displayed._id ? (displayed._id.split('drafts.').pop() as string) : ''
 
   const {errors, importTranslation, exportForTranslation} = useMemo(() => {
+    const {serializationOptions, baseLanguage, languageField} = props.options
     const ctx = {
       client,
       schema,
@@ -69,8 +56,15 @@ const TranslationTab = (props: TranslationTabProps) => {
     }
 
     const contextImportTranslation = (localeId: string, doc: string) => {
-      const baseLanguage = props.options.baseLanguage
-      return importTranslationFunc(documentId, localeId, doc, ctx, baseLanguage)
+      return importTranslationFunc(
+        documentId,
+        localeId,
+        doc,
+        ctx,
+        baseLanguage,
+        serializationOptions,
+        languageField,
+      )
     }
 
     const exportTranslationFunc = props.options.exportForTranslation
@@ -86,7 +80,7 @@ const TranslationTab = (props: TranslationTabProps) => {
     }
 
     const contextExportForTranslation = (id: string) => {
-      return exportTranslationFunc(id, ctx)
+      return exportTranslationFunc(id, ctx, baseLanguage, serializationOptions, languageField)
     }
 
     return {

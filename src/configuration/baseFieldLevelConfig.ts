@@ -4,6 +4,9 @@ import {
   BaseDocumentDeserializer,
   BaseDocumentMerger,
   SerializedDocument,
+  defaultStopTypes,
+  customSerializers,
+  customBlockDeserializers,
 } from 'sanity-naive-html-serializer'
 
 import {DummyAdapter} from '../adapter'
@@ -38,19 +41,48 @@ export const baseFieldLevelConfig = {
   exportForTranslation: async (
     ...params: Parameters<ExportForTranslation>
   ): Promise<SerializedDocument> => {
-    const [id, context] = params
+    const [id, context, baseLanguage = 'en', serializationOptions = {}] = params
     const {client, schema} = context
+    const stopTypes = [...(serializationOptions.additionalStopTypes ?? []), ...defaultStopTypes]
+    const serializers = {
+      ...customSerializers,
+      types: {
+        ...customSerializers.types,
+        ...(serializationOptions.additionalSerializers ?? {}),
+      },
+    }
     const doc = await findLatestDraft(id, client)
-    const serialized = BaseDocumentSerializer(schema).serializeDocument(doc, 'field')
+    const serialized = BaseDocumentSerializer(schema).serializeDocument(
+      doc,
+      'field',
+      baseLanguage,
+      stopTypes,
+      serializers,
+    )
     serialized.name = id
     return serialized
   },
   importTranslation: (...params: Parameters<ImportTranslation>): Promise<void> => {
-    const [id, localeId, document, context, , baseLanguage = 'en'] = params
+    const [id, localeId, document, context, baseLanguage = 'en', serializationOptions = {}] = params
     const {client} = context
-    const deserialized = BaseDocumentDeserializer.deserializeDocument(document) as SanityDocument
+    const deserializers = {
+      types: {
+        ...(serializationOptions.additionalDeserializers ?? {}),
+      },
+    }
+    const blockDeserializers = [
+      ...(serializationOptions.additionalBlockDeserializers ?? []),
+      ...customBlockDeserializers,
+    ]
+
+    const deserialized = BaseDocumentDeserializer.deserializeDocument(
+      document,
+      deserializers,
+      blockDeserializers,
+    ) as SanityDocument
     return fieldLevelPatch(id, deserialized, localeId, client, baseLanguage)
   },
   adapter: DummyAdapter,
   secretsNamespace: 'translationService',
+  baseLanguage: 'en',
 }

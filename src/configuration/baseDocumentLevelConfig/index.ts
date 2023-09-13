@@ -7,6 +7,9 @@ import {
   SerializedDocument,
   BaseDocumentDeserializer,
   BaseDocumentSerializer,
+  defaultStopTypes,
+  customSerializers,
+  customBlockDeserializers,
 } from 'sanity-naive-html-serializer'
 import {DummyAdapter} from '../../adapter'
 
@@ -14,30 +17,88 @@ export const baseDocumentLevelConfig = {
   exportForTranslation: async (
     ...params: Parameters<ExportForTranslation>
   ): Promise<SerializedDocument> => {
-    const [id, context] = params
+    const [
+      id,
+      context,
+      baseLanguage = 'en',
+      serializationOptions = {},
+      languageField = 'language',
+    ] = params
     const {client, schema} = context
+    const stopTypes = [...(serializationOptions.additionalStopTypes ?? []), ...defaultStopTypes]
+    const serializers = {
+      ...customSerializers,
+      types: {
+        ...customSerializers.types,
+        ...(serializationOptions.additionalSerializers ?? {}),
+      },
+    }
     const doc = await findLatestDraft(id, client)
-    const serialized = BaseDocumentSerializer(schema).serializeDocument(doc, 'document')
+    delete doc[languageField]
+    const serialized = BaseDocumentSerializer(schema).serializeDocument(
+      doc,
+      'document',
+      baseLanguage,
+      stopTypes,
+      serializers,
+    )
     serialized.name = id
     return serialized
   },
-  importTranslation: async (...params: Parameters<ImportTranslation>): Promise<void> => {
-    const [id, localeId, document, context, baseLanguage] = params
+  importTranslation: (...params: Parameters<ImportTranslation>): Promise<void> => {
+    const [
+      id,
+      localeId,
+      document,
+      context,
+      baseLanguage = 'en',
+      serializationOptions = {},
+      languageField = 'language',
+    ] = params
     const {client} = context
-    const deserialized = BaseDocumentDeserializer.deserializeDocument(document) as SanityDocument
-    await documentLevelPatch(id, deserialized, localeId, client, baseLanguage)
+    const deserializers = {
+      types: {
+        ...(serializationOptions.additionalDeserializers ?? {}),
+      },
+    }
+    const blockDeserializers = [
+      ...(serializationOptions.additionalBlockDeserializers ?? []),
+      ...customBlockDeserializers,
+    ]
+
+    const deserialized = BaseDocumentDeserializer.deserializeDocument(
+      document,
+      deserializers,
+      blockDeserializers,
+    ) as SanityDocument
+    return documentLevelPatch(id, deserialized, localeId, client, baseLanguage, languageField)
   },
   adapter: DummyAdapter,
   secretsNamespace: 'translationService',
+  baseLanguage: 'en',
 }
 
 export const legacyDocumentLevelConfig = {
   ...baseDocumentLevelConfig,
-  importTranslation: async (...params: Parameters<ImportTranslation>): Promise<void> => {
-    const [id, localeId, document, context] = params
+  importTranslation: (...params: Parameters<ImportTranslation>): Promise<void> => {
+    const [id, localeId, document, context, , serializationOptions = {}] = params
     const {client} = context
-    const deserialized = BaseDocumentDeserializer.deserializeDocument(document) as SanityDocument
-    await legacyDocumentLevelPatch(id, deserialized, localeId, client)
+    const deserializers = {
+      types: {
+        ...(serializationOptions.additionalDeserializers ?? {}),
+      },
+    }
+    const blockDeserializers = [
+      ...(serializationOptions.additionalBlockDeserializers ?? []),
+      ...customBlockDeserializers,
+    ]
+
+    const deserialized = BaseDocumentDeserializer.deserializeDocument(
+      document,
+      deserializers,
+      blockDeserializers,
+    ) as SanityDocument
+    return legacyDocumentLevelPatch(id, deserialized, localeId, client)
   },
 }
 
