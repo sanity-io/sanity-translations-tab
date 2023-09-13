@@ -1,6 +1,6 @@
 {
   "name": "sanity-translations-tab",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "This is the base module for implementing common translation vendor tasks from a Studio, such as sending content to be translated in some specific languages, importing content back etc. Not useful on its own, but vendor-specific plugins will use this for its chrome.",
   "keywords": [
     "sanity",
@@ -53,6 +53,8 @@
     "watch": "pkg-utils watch --strict"
   },
   "dependencies": {
+    "@portabletext/to-html": "^2.0.3",
+    "@sanity/block-tools": "^3.16.4",
     "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/ui": "^1",
     "@sanity/util": "^3.16.4",

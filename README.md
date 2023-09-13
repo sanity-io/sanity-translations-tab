@@ -65,7 +65,8 @@ export const getDefaultDocumentNode = ({schemaType}) => {
           localeIdAdapter: (translationVendorId) => sanityId,
 
           /**
-           * For field-level translations, the key for the "source content"
+           * the key for the "source content" (for field level) or the code in the 
+           * language field on the "base document" (for document level)
            *  (e.g. "en" or "en_US").
            */
           baseLanguage: 'en_US',

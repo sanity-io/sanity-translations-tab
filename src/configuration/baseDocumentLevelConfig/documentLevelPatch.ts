@@ -15,6 +15,8 @@ export const documentLevelPatch = async (
   localeId: string,
   client: SanityClient,
   baseLanguage: string = 'en',
+  languageField: string = 'language',
+  // eslint-disable-next-line max-params
 ): Promise<void> => {
   let baseDoc: SanityDocument | null = null
 
@@ -61,6 +63,6 @@ export const documentLevelPatch = async (
   //otherwise, create a new document
   //and add the document reference to the metadata document
   else if (translationMetadata) {
-    createI18nDocAndPatchMetadata(merged, localeId, client, translationMetadata)
+    createI18nDocAndPatchMetadata(merged, localeId, client, translationMetadata, languageField)
   }
 }
