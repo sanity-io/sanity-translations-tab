@@ -39,7 +39,7 @@ export type WorkflowIdentifiers = {
 }
 
 export type CustomParams = {
-  callbackUrl?: string
+  callbackUrl?: (document: Record<string, any>) => string
 }
 
 export interface Adapter {
