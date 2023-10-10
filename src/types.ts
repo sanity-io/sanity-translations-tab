@@ -38,6 +38,10 @@ export type WorkflowIdentifiers = {
   workflowName: string
 }
 
+export type CustomParams = {
+  callbackUrl?: string
+}
+
 export interface Adapter {
   getLocales: (secrets: Secrets | null) => Promise<TranslationLocale[]>
   getTranslationTask: (documentId: string, secrets: Secrets | null) => Promise<TranslationTask>
@@ -47,6 +51,7 @@ export interface Adapter {
     localeIds: string[],
     secrets: Secrets | null,
     workflowUid?: string,
+    customParams?: CustomParams,
   ) => Promise<TranslationTask>
   getTranslation: (taskid: string, localeId: string, secrets: Secrets | null) => Promise<any | null>
 }
@@ -95,4 +100,5 @@ export type TranslationsTabConfigOptions = {
   workflowOptions?: WorkflowIdentifiers[]
   localeIdAdapter?: (id: string) => string
   languageField?: string
+  customParams?: CustomParams
 }

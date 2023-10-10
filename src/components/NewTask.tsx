@@ -37,6 +37,7 @@ const LocaleCheckbox = ({locale, toggle, checked}: LocaleCheckboxProps) => {
           disabled={locale.enabled === false}
           checked={checked}
           //eslint-disable-next-line @typescript-eslint/no-empty-function
+          // eslint-disable-next-line react/jsx-no-bind
           onChange={() => {}} // noop
         />
         <WrapText>
@@ -91,6 +92,7 @@ export const NewTask = ({locales, refreshTask}: Props) => {
           selectedLocales as string[],
           context.secrets,
           selectedWorkflowUid,
+          context.customParams,
         ),
       )
       .then(() => {

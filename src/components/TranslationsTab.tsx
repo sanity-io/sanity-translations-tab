@@ -142,6 +142,7 @@ const TranslationTab = (props: TranslationTabProps) => {
                   baseLanguage: props.options.baseLanguage,
                   workflowOptions: props.options.workflowOptions,
                   localeIdAdapter: props.options.localeIdAdapter,
+                  customParams: props.options.customParams,
                 }}
               >
                 <TranslationView />
