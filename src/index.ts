@@ -7,7 +7,6 @@ import {
   ImportTranslation,
   TranslationFunctionContext,
   TranslationsTabConfigOptions,
-  CustomParams,
 } from './types'
 import {
   baseDocumentLevelConfig,
@@ -33,7 +32,6 @@ export type {
   ImportTranslation,
   TranslationFunctionContext,
   TranslationsTabConfigOptions,
-  CustomParams,
 }
 export {
   TranslationsTab,

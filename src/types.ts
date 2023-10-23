@@ -1,4 +1,4 @@
-import {SanityClient, Schema, TypedObject} from 'sanity'
+import {SanityClient, Schema, TypedObject, SanityDocumentLike} from 'sanity'
 import {SerializedDocument} from 'sanity-naive-html-serializer'
 import {PortableTextTypeComponent} from '@portabletext/to-html'
 import {DeserializerRule} from '@sanity/block-tools'
@@ -38,20 +38,16 @@ export type WorkflowIdentifiers = {
   workflowName: string
 }
 
-export type CustomParams = {
-  callbackUrl?: (document: Record<string, any>) => string
-}
-
 export interface Adapter {
   getLocales: (secrets: Secrets | null) => Promise<TranslationLocale[]>
   getTranslationTask: (documentId: string, secrets: Secrets | null) => Promise<TranslationTask>
   createTask: (
     taskName: string,
-    document: Record<string, any>,
+    serializedDocument: SerializedDocument,
     localeIds: string[],
     secrets: Secrets | null,
     workflowUid?: string,
-    customParams?: CustomParams,
+    callbackUrl?: (document: SanityDocumentLike) => string,
   ) => Promise<TranslationTask>
   getTranslation: (taskid: string, localeId: string, secrets: Secrets | null) => Promise<any | null>
 }
@@ -100,5 +96,5 @@ export type TranslationsTabConfigOptions = {
   workflowOptions?: WorkflowIdentifiers[]
   localeIdAdapter?: (id: string) => string
   languageField?: string
-  customParams?: CustomParams
+  callbackUrl?: (document: SanityDocumentLike) => string
 }

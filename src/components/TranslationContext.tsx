@@ -1,6 +1,7 @@
 import React from 'react'
 import {SerializedDocument} from 'sanity-naive-html-serializer'
-import {Adapter, CustomParams, Secrets, WorkflowIdentifiers} from '../types'
+import {Adapter, Secrets, WorkflowIdentifiers} from '../types'
+import {SanityDocumentLike} from 'sanity'
 
 export type ContextProps = {
   documentId: string
@@ -11,7 +12,7 @@ export type ContextProps = {
   secrets: Secrets
   workflowOptions?: WorkflowIdentifiers[]
   localeIdAdapter?: (id: string) => string | Promise<string>
-  customParams?: CustomParams
+  callbackUrl?: (document: SanityDocumentLike) => string
 }
 
 export const TranslationContext = React.createContext<ContextProps | null>(null)
