@@ -1,4 +1,4 @@
-import {SanityClient, Schema, TypedObject, SanityDocumentLike} from 'sanity'
+import {SanityClient, Schema, TypedObject} from 'sanity'
 import {SerializedDocument} from 'sanity-naive-html-serializer'
 import {PortableTextTypeComponent} from '@portabletext/to-html'
 import {DeserializerRule} from '@sanity/block-tools'
@@ -47,7 +47,7 @@ export interface Adapter {
     localeIds: string[],
     secrets: Secrets | null,
     workflowUid?: string,
-    callbackUrl?: (document: SanityDocumentLike) => string,
+    callbackUrl?: (document: SerializedDocument) => string,
   ) => Promise<TranslationTask>
   getTranslation: (taskid: string, localeId: string, secrets: Secrets | null) => Promise<any | null>
 }
@@ -91,10 +91,10 @@ export type TranslationsTabConfigOptions = {
     additionalStopTypes?: string[]
     additionalSerializers?: Record<string, PortableTextTypeComponent | undefined>
     additionalDeserializers?: Record<string, (value: HTMLElement) => TypedObject>
-    additionalBlockDeserializers?: DeserializerRule[]
+    additionalBlockDeserializersgg?: DeserializerRule[]
   }
   workflowOptions?: WorkflowIdentifiers[]
   localeIdAdapter?: (id: string) => string
   languageField?: string
-  callbackUrl?: (document: SanityDocumentLike) => string
+  callbackUrl?: (document: SerializedDocument) => string
 }
