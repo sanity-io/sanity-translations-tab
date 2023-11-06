@@ -36,8 +36,6 @@ const LocaleCheckbox = ({locale, toggle, checked}: LocaleCheckboxProps) => {
           style={{pointerEvents: `none`}}
           disabled={locale.enabled === false}
           checked={checked}
-          //eslint-disable-next-line @typescript-eslint/no-empty-function
-          onChange={() => {}} // noop
         />
         <WrapText>
           <Text size={1} weight="semibold">
@@ -91,6 +89,7 @@ export const NewTask = ({locales, refreshTask}: Props) => {
           selectedLocales as string[],
           context.secrets,
           selectedWorkflowUid,
+          context.callbackUrl,
         ),
       )
       .then(() => {

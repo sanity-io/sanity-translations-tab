@@ -23,6 +23,7 @@ import {
   BaseDocumentMerger,
   defaultStopTypes,
   customSerializers,
+  SerializedDocument,
 } from 'sanity-naive-html-serializer'
 
 export type {
@@ -32,6 +33,7 @@ export type {
   ImportTranslation,
   TranslationFunctionContext,
   TranslationsTabConfigOptions,
+  SerializedDocument,
 }
 export {
   TranslationsTab,
