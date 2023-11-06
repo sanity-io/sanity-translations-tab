@@ -47,7 +47,7 @@ export interface Adapter {
     localeIds: string[],
     secrets: Secrets | null,
     workflowUid?: string,
-    callbackUrl?: (document: SerializedDocument) => string,
+    callbackUrl?: string,
   ) => Promise<TranslationTask>
   getTranslation: (taskid: string, localeId: string, secrets: Secrets | null) => Promise<any | null>
 }
@@ -96,5 +96,5 @@ export type TranslationsTabConfigOptions = {
   workflowOptions?: WorkflowIdentifiers[]
   localeIdAdapter?: (id: string) => string
   languageField?: string
-  callbackUrl?: (document: SerializedDocument) => string
+  callbackUrl?: string
 }

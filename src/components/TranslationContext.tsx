@@ -11,7 +11,7 @@ export type ContextProps = {
   secrets: Secrets
   workflowOptions?: WorkflowIdentifiers[]
   localeIdAdapter?: (id: string) => string | Promise<string>
-  callbackUrl?: (serializedDocument: SerializedDocument) => string
+  callbackUrl?: string
 }
 
 export const TranslationContext = React.createContext<ContextProps | null>(null)
