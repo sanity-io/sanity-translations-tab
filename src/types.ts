@@ -91,7 +91,7 @@ export type TranslationsTabConfigOptions = {
     additionalStopTypes?: string[]
     additionalSerializers?: Record<string, PortableTextTypeComponent | undefined>
     additionalDeserializers?: Record<string, (value: HTMLElement) => TypedObject>
-    additionalBlockDeserializersgg?: DeserializerRule[]
+    additionalBlockDeserializers?: DeserializerRule[]
   }
   workflowOptions?: WorkflowIdentifiers[]
   localeIdAdapter?: (id: string) => string
