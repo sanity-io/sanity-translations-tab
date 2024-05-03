@@ -79,6 +79,7 @@ export type ImportTranslation = (
     additionalBlockDeserializers?: DeserializerRule[]
   },
   languageField?: string,
+  mergeWithTargetLocale?: boolean,
 ) => Promise<void>
 
 export type TranslationsTabConfigOptions = {
@@ -97,4 +98,5 @@ export type TranslationsTabConfigOptions = {
   localeIdAdapter?: (id: string) => string
   languageField?: string
   callbackUrl?: string
+  mergeWithTargetLocale?: boolean
 }

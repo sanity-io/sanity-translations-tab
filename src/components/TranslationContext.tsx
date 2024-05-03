@@ -12,6 +12,7 @@ export type ContextProps = {
   workflowOptions?: WorkflowIdentifiers[]
   localeIdAdapter?: (id: string) => string | Promise<string>
   callbackUrl?: string
+  mergeWithTargetLocale?: boolean
 }
 
 export const TranslationContext = React.createContext<ContextProps | null>(null)
