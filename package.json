@@ -55,15 +55,9 @@
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/incompatible-plugin": "^1.0.5",
-<<<<<<< HEAD
     "@sanity/ui": "^3.1.11",
     "@sanity/util": "^5.2.0",
-    "sanity-naive-html-serializer": "^4.0.2"
-=======
-    "@sanity/ui": "^2.16.4",
-    "@sanity/util": "^3.98.1",
-    "sanity-naive-html-serializer": "^3.2.0-beta.1"
->>>>>>> 6e698d0 (feat: add initial i18n array config)
+    "sanity-naive-html-serializer": "^4.1.0"
   },
   "devDependencies": {
     "@portabletext/block-tools": "^5.0.0",

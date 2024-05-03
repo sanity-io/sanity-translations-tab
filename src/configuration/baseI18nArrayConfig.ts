@@ -27,22 +27,21 @@ export const i18nArrayPatch = async (
     baseDoc = await findLatestDraft(documentId, client)
   }
 
+  const arbitraryPosition = 1
+
   const mutations = BaseDocumentMerger.internationalizedArrayMerge(
     translatedFields,
     baseDoc,
     localeId,
     baseLanguage,
+    arbitraryPosition,
   )
 
   const transaction = client.transaction()
 
   mutations.forEach((mutation: Record<string, any>) => {
-    const {after, replace, items} = mutation
-    if (after) {
-      transaction.patch(client.patch(baseDoc._id).insert('after', after, items))
-    } else if (replace) {
-      transaction.patch(client.patch(baseDoc._id).insert('replace', replace, items))
-    }
+    const {at, selector, items} = mutation
+    transaction.patch(client.patch(baseDoc._id).insert(at, selector, items))
   })
 
   transaction.commit()
