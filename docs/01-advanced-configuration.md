@@ -60,6 +60,10 @@ const customConfig = {
       },
     ],
   },
+  //sometimes editors will duplicate a field or document and begin changing assets
+  //THEN import the translation. If this is a typical workflow, please toggle the following option
+  //(it is defaulted to false)
+  mergeWithTargetLocale: true
   //adapter, baseLanguage, secretsNamespace, importTranslation, exportForTranslation should likely not be touched unless you very much want to customize your plugin.
 } satisfies TranslationsTabConfigOptions
 ```
