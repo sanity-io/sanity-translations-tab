@@ -19,6 +19,8 @@ export const fieldLevelPatch = async (
   localeId: string,
   client: SanityClient,
   baseLanguage: string = 'en',
+  mergeWithTargetLocale: boolean = false,
+  // eslint-disable-next-line max-params
 ): Promise<void> => {
   let baseDoc: SanityDocument
   if (translatedFields._rev && translatedFields._id) {
@@ -31,7 +33,7 @@ export const fieldLevelPatch = async (
     translatedFields,
     baseDoc,
     localeId,
-    baseLanguage,
+    mergeWithTargetLocale ? baseLanguage : localeId,
   )
 
   await client.patch(baseDoc._id).set(merged).commit()
@@ -63,7 +65,16 @@ export const baseFieldLevelConfig = {
     return serialized
   },
   importTranslation: (...params: Parameters<ImportTranslation>): Promise<void> => {
-    const [id, localeId, document, context, baseLanguage = 'en', serializationOptions = {}] = params
+    const [
+      id,
+      localeId,
+      document,
+      context,
+      baseLanguage = 'en',
+      serializationOptions = {},
+      ,
+      mergeWithTargetLocale,
+    ] = params
     const {client} = context
     const deserializers = {
       types: {
@@ -80,7 +91,7 @@ export const baseFieldLevelConfig = {
       deserializers,
       blockDeserializers,
     ) as SanityDocument
-    return fieldLevelPatch(id, deserialized, localeId, client, baseLanguage)
+    return fieldLevelPatch(id, deserialized, localeId, client, baseLanguage, mergeWithTargetLocale)
   },
   adapter: DummyAdapter,
   secretsNamespace: 'translationService',

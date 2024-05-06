@@ -54,6 +54,7 @@ export const baseDocumentLevelConfig = {
       baseLanguage = 'en',
       serializationOptions = {},
       languageField = 'language',
+      mergeWithTargetLocale = false,
     ] = params
     const {client} = context
     const deserializers = {
@@ -71,7 +72,15 @@ export const baseDocumentLevelConfig = {
       deserializers,
       blockDeserializers,
     ) as SanityDocument
-    return documentLevelPatch(id, deserialized, localeId, client, baseLanguage, languageField)
+    return documentLevelPatch(
+      id,
+      deserialized,
+      localeId,
+      client,
+      baseLanguage,
+      languageField,
+      mergeWithTargetLocale,
+    )
   },
   adapter: DummyAdapter,
   secretsNamespace: 'translationService',

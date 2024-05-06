@@ -16,9 +16,14 @@ export const documentLevelPatch = async (
   client: SanityClient,
   baseLanguage: string = 'en',
   languageField: string = 'language',
+  mergeWithTargetLocale: boolean = false,
   // eslint-disable-next-line max-params
 ): Promise<void> => {
+  //this is the document we use to merge with the translated fields
   let baseDoc: SanityDocument | null = null
+
+  //this is the document that will serve as the translated doc
+  let i18nDoc: SanityDocument | null = null
 
   /*
    * we send over the _rev with our translation file so we can
@@ -28,6 +33,41 @@ export const documentLevelPatch = async (
   if (translatedFields._id && translatedFields._rev) {
     baseDoc = await findDocumentAtRevision(translatedFields._id, translatedFields._rev, client)
   }
+  if (!baseDoc) {
+    baseDoc = await findLatestDraft(documentId, client)
+  }
+
+  /* first, check our metadata to see if a translated document exists
+   * if no metadata exists, we create it
+   */
+  let translationMetadata = await getTranslationMetadata(documentId, client, baseLanguage)
+  if (!translationMetadata) {
+    translationMetadata = await createTranslationMetadata(baseDoc, client, baseLanguage)
+  }
+
+  //the id of the translated document should be on the metadata if it exists
+  const i18nDocId = (translationMetadata.translations as Array<Record<string, any>>).find(
+    (translation) => translation._key === localeId,
+  )?.value?._ref
+
+  if (i18nDocId) {
+    //get draft or published
+    i18nDoc = await findLatestDraft(i18nDocId, client)
+  }
+
+  //if the user has chosen to merge with the target locale,
+  //any existing target document will serve as our base document
+  if (mergeWithTargetLocale && i18nDoc) {
+    baseDoc = i18nDoc
+  } else if (translatedFields._id && translatedFields._rev) {
+    /*
+     * we send over the _rev with our translation file so we can
+     * accurately coalesce the translations in case something has
+     * changed in the base document since translating
+     */
+    baseDoc = await findDocumentAtRevision(translatedFields._id, translatedFields._rev, client)
+  }
+
   if (!baseDoc) {
     baseDoc = await findLatestDraft(documentId, client)
   }
@@ -41,28 +81,12 @@ export const documentLevelPatch = async (
     baseDoc,
   ) as SanityDocumentLike
 
-  /* we now need to check if we have a translation metadata document
-   * and a translated document
-   * if no metadata exists, we create it
-   */
-  let translationMetadata = await getTranslationMetadata(documentId, client, baseLanguage)
-  if (!translationMetadata) {
-    translationMetadata = await createTranslationMetadata(baseDoc, client, baseLanguage)
-  }
-
-  const i18nDocId = (translationMetadata.translations as Array<Record<string, any>>).find(
-    (translation) => translation._key === localeId,
-  )?.value?._ref
-
-  //if we have a translated document, we patch it
-  if (i18nDocId) {
-    //get draft or published
-    const i18nDoc = await findLatestDraft(i18nDocId, client)
+  if (i18nDoc) {
     patchI18nDoc(i18nDoc._id, merged, translatedFields, client)
   }
   //otherwise, create a new document
   //and add the document reference to the metadata document
-  else if (translationMetadata) {
+  else {
     createI18nDocAndPatchMetadata(merged, localeId, client, translationMetadata, languageField)
   }
 }

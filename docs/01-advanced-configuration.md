@@ -4,14 +4,19 @@ This plugin provides defaults for most configuration options, but they can be ov
 
 ```typescript
 //sanity.config.ts
-import {TranslationsTab, defaultDocumentLevelConfig, defaultFieldLevelConfig, TranslationsTabConfigOptions} from 'sanity-translations-tab'
+import {
+  TranslationsTab,
+  defaultDocumentLevelConfig,
+  defaultFieldLevelConfig,
+  TranslationsTabConfigOptions,
+} from 'sanity-translations-tab'
 
 const customConfig = {
   ...defaultDocumentLevelConfig,
   //baseLanguage is `en` by default, overwrite as needed. This is important for coalescing translations and creating accurate translation metadata.
-  baseLanguage: 'en_US', 
+  baseLanguage: 'en_US',
   //this is the field that will be used to determine the language of the document. It is `language` by default.
-  languageField: 'locale', 
+  languageField: 'locale',
   serializationOptions: {
     //use this option to exclude objects that do not need to be translated. The plugin already uses defaults for references, dates, numbers, etc.
     additionalStopTypes: ['colorTheme'],
@@ -21,7 +26,7 @@ const customConfig = {
     additionalSerializers: {
       testObject: ({value}) => {
         return `<span class="${value._type}" id="${value._key}">${value.title}</span>`
-      }
+      },
     },
     //Create a method to deserialize any custom serialization rules
     additonalDeserializers: {
@@ -29,9 +34,9 @@ const customConfig = {
         return {
           _type: 'testObject',
           _key: node.id,
-          title: node.textContent
+          title: node.textContent,
         }
-      }
+      },
     },
     //Block text requires a special deserialization format based on @sanity/block-tools. Use this option for any annotations or inline objects that need to be translated.
     additionalBlockDeserializers: [
@@ -53,8 +58,12 @@ const customConfig = {
           }
         },
       },
-    ]
-  }
+    ],
+  },
+  //sometimes editors will duplicate a field or document and begin changing assets
+  //THEN import the translation. this option merges your translated strings with 
+  //the already-existing translated document or field.
+  mergeWithTargetLocale: true,
   //adapter, baseLanguage, secretsNamespace, importTranslation, exportForTranslation should likely not be touched unless you very much want to customize your plugin.
 } satisfies TranslationsTabConfigOptions
 ```
