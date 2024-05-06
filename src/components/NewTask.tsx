@@ -35,6 +35,7 @@ const LocaleCheckbox = ({locale, toggle, checked}: LocaleCheckboxProps) => {
         <Switch
           style={{pointerEvents: `none`}}
           disabled={locale.enabled === false}
+          onChange={onClick}
           checked={checked}
         />
         <WrapText>

@@ -1,6 +1,6 @@
 {
   "name": "sanity-translations-tab",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "description": "This is the base module for implementing common translation vendor tasks from a Studio, such as sending content to be translated in some specific languages, importing content back etc. Not useful on its own, but vendor-specific plugins will use this for its chrome.",
   "keywords": [
     "sanity",
@@ -55,18 +55,18 @@
   "dependencies": {
     "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/ui": "^1",
-    "@sanity/util": "^3.16.4",
-    "sanity-naive-html-serializer": "^3.1.5",
-    "styled-components": "^5.2"
+    "@sanity/util": "^3.40.0",
+    "sanity-naive-html-serializer": "^3.1.8",
+    "styled-components": "^6.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
     "@portabletext/to-html": "^2.0.3",
-    "@sanity/block-tools": "^3.20.0",
+    "@sanity/block-tools": "^3.40.0",
     "@sanity/pkg-utils": "^2.4.8",
     "@sanity/plugin-kit": "^3.1.10",
-    "@sanity/semantic-release-preset": "^4.1.4",
+    "@sanity/semantic-release-preset": "^4.1.7",
     "@types/react": "^18.2.21",
     "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
@@ -82,11 +82,11 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^3.0.3",
     "prettier-plugin-packagejson": "^2.4.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-is": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-is": "^18.3.1",
     "rimraf": "^5.0.1",
-    "sanity": "^3.16.4",
+    "sanity": "^3.40.0",
     "styled-components": "^5.2",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2"
