@@ -38,7 +38,7 @@ export const LanguageStatus = ({title, progress, importFile}: LanguageStatusProp
             onClick={handleImport}
             text={isBusy ? 'Importing...' : 'Import'}
             icon={isBusy ? null : DownloadIcon}
-            disabled={isBusy || !progress || progress < 1}
+            disabled={isBusy || !progress || progress < 100}
           />
         </Box>
       </Grid>
