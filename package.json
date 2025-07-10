@@ -53,22 +53,21 @@
     "watch": "pkg-utils watch --strict"
   },
   "dependencies": {
-    "@sanity/incompatible-plugin": "^1.0.4",
-    "@sanity/ui": "^1",
-    "@sanity/util": "^3.40.0",
-    "sanity-naive-html-serializer": "^3.1.8",
-    "styled-components": "^6.1"
+    "@portabletext/to-html": "^2.0.14",
+    "@sanity/block-tools": "^3.70.0",
+    "@sanity/icons": "^3.7.4",
+    "@sanity/incompatible-plugin": "^1.0.5",
+    "@sanity/ui": "^2.16.4",
+    "@sanity/util": "^3.98.1",
+    "sanity-naive-html-serializer": "^3.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
-    "@portabletext/to-html": "^2.0.3",
-    "@sanity/block-tools": "^3.40.0",
     "@sanity/pkg-utils": "^2.4.8",
     "@sanity/plugin-kit": "^3.1.10",
     "@sanity/semantic-release-preset": "^4.1.7",
     "@types/react": "^18.2.21",
-    "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
     "eslint": "^8.48.0",
@@ -87,16 +86,15 @@
     "react-is": "^18.3.1",
     "rimraf": "^5.0.1",
     "sanity": "^3.40.0",
-    "styled-components": "^5.2",
+    "styled-components": "^6.1.19",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "@sanity/ui": "^1",
-    "react": "^18",
-    "react-dom": "^18",
-    "sanity": "^3",
-    "styled-components": "^5.2"
+    "react": "^18.3 || ^19",
+    "react-dom": "^18.3 || ^19",
+    "sanity": "^3 || ^4.0.0-0",
+    "styled-components": "^6.1"
   },
   "engines": {
     "node": ">=14"

@@ -1,5 +1,3 @@
-> This is a **Sanity Studio v3** plugin.
-
 ## Installation
 
 ```sh
