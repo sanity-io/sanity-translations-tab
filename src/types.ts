@@ -1,7 +1,7 @@
-import {SanityClient, Schema, TypedObject} from 'sanity'
-import {SerializedDocument} from 'sanity-naive-html-serializer'
-import {PortableTextTypeComponent} from '@portabletext/to-html'
-import {DeserializerRule} from '@sanity/block-tools'
+import type {SanityClient, Schema, TypedObject} from 'sanity'
+import type {SerializedDocument} from 'sanity-naive-html-serializer'
+import type {PortableTextTypeComponent} from '@portabletext/to-html'
+import type {DeserializerRule} from '@portabletext/block-tools'
 
 export type TranslationTaskLocaleStatus = {
   localeId: string

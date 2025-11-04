@@ -53,8 +53,6 @@
     "watch": "pkg-utils watch --strict"
   },
   "dependencies": {
-    "@portabletext/to-html": "^2.0.14",
-    "@sanity/block-tools": "^3.70.0",
     "@sanity/icons": "^3.7.4",
     "@sanity/incompatible-plugin": "^1.0.5",
     "@sanity/ui": "^2.16.4",
@@ -64,6 +62,8 @@
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
+    "@portabletext/block-tools": "^3.5.4",
+    "@portabletext/to-html": "^2.0.14",
     "@sanity/pkg-utils": "^2.4.8",
     "@sanity/plugin-kit": "^3.1.10",
     "@sanity/semantic-release-preset": "^4.1.7",
