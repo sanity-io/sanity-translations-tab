@@ -61,7 +61,7 @@ const customConfig = {
     ],
   },
   //sometimes editors will duplicate a field or document and begin changing assets
-  //THEN import the translation. this option merges your translated strings with 
+  //THEN import the translation. this option merges your translated strings with
   //the already-existing translated document or field.
   mergeWithTargetLocale: true,
   //adapter, baseLanguage, secretsNamespace, importTranslation, exportForTranslation should likely not be touched unless you very much want to customize your plugin.

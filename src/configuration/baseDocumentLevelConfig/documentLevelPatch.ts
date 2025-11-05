@@ -1,11 +1,11 @@
-import {SanityClient, SanityDocument, SanityDocumentLike} from 'sanity'
+import type {SanityClient, SanityDocument, SanityDocumentLike} from 'sanity'
 import {BaseDocumentMerger} from 'sanity-naive-html-serializer'
 
-import {findLatestDraft, findDocumentAtRevision} from '../utils'
+import {findDocumentAtRevision, findLatestDraft} from '../utils'
 import {
   createI18nDocAndPatchMetadata,
-  getTranslationMetadata,
   createTranslationMetadata,
+  getTranslationMetadata,
   patchI18nDoc,
 } from './helpers'
 
@@ -82,11 +82,17 @@ export const documentLevelPatch = async (
   ) as SanityDocumentLike
 
   if (i18nDoc) {
-    patchI18nDoc(i18nDoc._id, merged, translatedFields, client)
+    await patchI18nDoc(i18nDoc._id, merged, translatedFields, client)
   }
   //otherwise, create a new document
   //and add the document reference to the metadata document
   else {
-    createI18nDocAndPatchMetadata(merged, localeId, client, translationMetadata, languageField)
+    await createI18nDocAndPatchMetadata(
+      merged,
+      localeId,
+      client,
+      translationMetadata,
+      languageField,
+    )
   }
 }
