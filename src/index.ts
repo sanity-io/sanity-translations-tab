@@ -13,9 +13,11 @@ import {
   legacyDocumentLevelConfig,
   legacyDocumentLevelPatch,
   baseFieldLevelConfig,
+  baseI18nArrayConfig,
   findLatestDraft,
   documentLevelPatch,
   fieldLevelPatch,
+  i18nArrayPatch,
 } from './configuration'
 import {
   BaseDocumentSerializer,
@@ -42,11 +44,13 @@ export {
   baseDocumentLevelConfig,
   legacyDocumentLevelConfig,
   baseFieldLevelConfig,
+  baseI18nArrayConfig,
   //helpers for end developers who may need to customize serialization
   findLatestDraft,
   legacyDocumentLevelPatch,
   documentLevelPatch,
   fieldLevelPatch,
+  i18nArrayPatch,
   BaseDocumentSerializer,
   BaseDocumentDeserializer,
   BaseDocumentMerger,
