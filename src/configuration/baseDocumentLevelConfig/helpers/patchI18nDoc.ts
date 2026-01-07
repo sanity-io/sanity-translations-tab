@@ -1,11 +1,11 @@
-import {SanityClient, SanityDocumentLike} from 'sanity'
+import type {SanityClient, SanityDocumentLike} from 'sanity'
 
-export const patchI18nDoc = (
+export const patchI18nDoc = async (
   i18nDocId: string,
   mergedDocument: SanityDocumentLike,
   translatedFields: Record<string, any>,
   client: SanityClient,
-): void => {
+): Promise<void> => {
   const cleanedMerge: Record<string, any> = {}
   Object.entries(mergedDocument).forEach(([key, value]) => {
     if (
@@ -18,7 +18,7 @@ export const patchI18nDoc = (
     }
   })
 
-  client
+  await client
     .transaction()
     .patch(i18nDocId, (p) => p.set(cleanedMerge))
     .commit()
