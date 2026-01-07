@@ -60,8 +60,6 @@
     "sanity-naive-html-serializer": "^3.2.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.7.1",
-    "@commitlint/config-conventional": "^17.7.0",
     "@portabletext/block-tools": "^3.5.4",
     "@portabletext/to-html": "^2.0.14",
     "@sanity/pkg-utils": "^2.4.8",
@@ -93,7 +91,7 @@
   "peerDependencies": {
     "react": "^18.3 || ^19",
     "react-dom": "^18.3 || ^19",
-    "sanity": "^3 || ^4.0.0-0 || ^5.0.0",
+    "sanity": "^3 || ^4 || ^5",
     "styled-components": "^6.1"
   },
   "engines": {
