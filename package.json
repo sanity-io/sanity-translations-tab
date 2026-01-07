@@ -57,7 +57,7 @@
     "@sanity/incompatible-plugin": "^1.0.5",
     "@sanity/ui": "^2.16.4",
     "@sanity/util": "^5.2.0",
-    "sanity-naive-html-serializer": "^3.2.0"
+    "sanity-naive-html-serializer": "^4.0.2"
   },
   "devDependencies": {
     "@portabletext/block-tools": "^5.0.0",
