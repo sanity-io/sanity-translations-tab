@@ -99,4 +99,5 @@ export type TranslationsTabConfigOptions = {
   languageField?: string
   callbackUrl?: string
   mergeWithTargetLocale?: boolean
+  importAllConcurrency?: number
 }

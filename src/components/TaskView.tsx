@@ -20,6 +20,7 @@ export const TaskView = ({task, locales, refreshTask}: JobProps) => {
   const toast = useToast()
 
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [importingLocaleIds, setImportingLocaleIds] = useState<Set<string>>(new Set())
 
   const importFile = useCallback(
     async (localeId: string) => {
@@ -33,6 +34,7 @@ export const TaskView = ({task, locales, refreshTask}: JobProps) => {
         return
       }
 
+      setImportingLocaleIds((prev) => new Set(prev).add(localeId))
       const locale = getLocale(localeId, locales)
       const localeTitle = locale?.description || localeId
 
@@ -68,10 +70,41 @@ export const TaskView = ({task, locales, refreshTask}: JobProps) => {
           status: 'error',
           closable: true,
         })
+      } finally {
+        setImportingLocaleIds((prev) => {
+          const next = new Set(prev)
+          next.delete(localeId)
+          return next
+        })
       }
     },
     [locales, context, task.taskId, toast],
   )
+
+  const localesAt100 = task.locales.filter((l) => (l.progress ?? 0) === 100)
+  const showImportAll = localesAt100.length >= 2
+  const isAnyImportRunning = importingLocaleIds.size > 0
+  const concurrency = context?.importAllConcurrency ?? 10
+
+  const runWithConcurrency = useCallback(
+    async (localeIds: string[]) => {
+      let index = 0
+      const runOne = async (): Promise<void> => {
+        const i = index++
+        if (i >= localeIds.length) return
+        await importFile(localeIds[i])
+        await runOne()
+      }
+      await Promise.all(
+        Array.from({length: Math.min(concurrency, localeIds.length)}, () => runOne()),
+      )
+    },
+    [importFile, concurrency],
+  )
+
+  const handleImportAllClick = useCallback(() => {
+    runWithConcurrency(localesAt100.map((l) => l.localeId))
+  }, [runWithConcurrency, localesAt100])
 
   const handleRefreshClick = useCallback(async () => {
     setIsRefreshing(true)
@@ -107,6 +140,16 @@ export const TaskView = ({task, locales, refreshTask}: JobProps) => {
             onClick={handleRefreshClick}
             disabled={isRefreshing}
           />
+          {showImportAll && (
+            <Button
+              fontSize={1}
+              padding={2}
+              text="Import All"
+              onClick={handleImportAllClick}
+              disabled={isAnyImportRunning}
+              tone="positive"
+            />
+          )}
         </Flex>
       </Flex>
 
@@ -123,6 +166,7 @@ export const TaskView = ({task, locales, refreshTask}: JobProps) => {
               }}
               title={locale?.description || localeTask.localeId}
               progress={reportPercent}
+              isImporting={importingLocaleIds.has(localeTask.localeId)}
             />
           )
         })}

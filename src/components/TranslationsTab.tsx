@@ -145,6 +145,7 @@ const TranslationTab = (props: TranslationTabProps) => {
                   localeIdAdapter: props.options.localeIdAdapter,
                   callbackUrl: props.options.callbackUrl,
                   mergeWithTargetLocale: props.options.mergeWithTargetLocale,
+                  importAllConcurrency: props.options.importAllConcurrency ?? 10,
                 }}
               >
                 <TranslationView />

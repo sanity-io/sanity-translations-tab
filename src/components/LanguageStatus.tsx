@@ -7,10 +7,17 @@ type LanguageStatusProps = {
   title: string
   progress: number
   importFile: () => Promise<void>
+  isImporting?: boolean | undefined
 }
 
-export const LanguageStatus = ({title, progress, importFile}: LanguageStatusProps) => {
+export const LanguageStatus = ({
+  title,
+  progress,
+  importFile,
+  isImporting = false,
+}: LanguageStatusProps) => {
   const [isBusy, setIsBusy] = useState(false)
+  const busy = isBusy || isImporting
 
   const handleImport = useCallback(async () => {
     setIsBusy(true)
@@ -36,9 +43,9 @@ export const LanguageStatus = ({title, progress, importFile}: LanguageStatusProp
             style={{width: `100%`}}
             mode="ghost"
             onClick={handleImport}
-            text={isBusy ? 'Importing...' : 'Import'}
-            icon={isBusy ? null : DownloadIcon}
-            disabled={isBusy || !progress || progress < 100}
+            text={busy ? 'Importing...' : 'Import'}
+            icon={busy ? null : DownloadIcon}
+            disabled={busy || !progress || progress < 100}
           />
         </Box>
       </Grid>
