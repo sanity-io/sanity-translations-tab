@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.0](https://github.com/sanity-io/sanity-translations-tab/compare/v5.1.0...v5.2.0) (2026-02-16)
+
+### Features
+
+- add import all functionality ([#57](https://github.com/sanity-io/sanity-translations-tab/issues/57)) ([b5d4605](https://github.com/sanity-io/sanity-translations-tab/commit/b5d460562a2ff7a62ca063401d925ea95eae22dd))
+
 ## [5.1.0](https://github.com/sanity-io/sanity-translations-tab/compare/v5.0.0...v5.1.0) (2026-02-16)
 
 ### Features
