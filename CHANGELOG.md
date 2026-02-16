@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.0](https://github.com/sanity-io/sanity-translations-tab/compare/v5.0.0...v5.1.0) (2026-02-16)
+
+### Features
+
+- add i18n array config ([#47](https://github.com/sanity-io/sanity-translations-tab/issues/47)) ([469c5be](https://github.com/sanity-io/sanity-translations-tab/commit/469c5be82558de126ffe0b8d00a171abb44b5357))
+
 ## [5.0.0](https://github.com/sanity-io/sanity-translations-tab/compare/v4.4.1...v5.0.0) (2026-01-07)
 
 ### ⚠ BREAKING CHANGES
