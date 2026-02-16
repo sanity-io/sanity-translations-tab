@@ -13,6 +13,7 @@ export type ContextProps = {
   localeIdAdapter?: (id: string) => string | Promise<string>
   callbackUrl?: string
   mergeWithTargetLocale?: boolean
+  importAllConcurrency?: number
 }
 
 export const TranslationContext = React.createContext<ContextProps | null>(null)
