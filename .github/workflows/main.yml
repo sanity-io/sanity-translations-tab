@@ -106,16 +106,24 @@ jobs:
     runs-on: ubuntu-latest
     name: Semantic release
     permissions:
-      contents: write
+      contents: read
       issues: write
       pull-requests: write
       id-token: write
     steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.ECOSPARK_APP_ID }}
+          private-key: ${{ secrets.ECOSPARK_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3
         with:
           # Need to fetch entire commit history to
           # analyze every commit since last release
           fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: false
       - uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3
         with:
           cache: npm
@@ -128,11 +136,11 @@ jobs:
         # e.g. git tags were pushed but it exited before `npm publish`
         if: always()
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_CONFIG_PROVENANCE: true
         # Re-run semantic release with rich logs if it failed to publish for easier debugging
       - run: npx semantic-release --dry-run --debug
         if: failure()
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_CONFIG_PROVENANCE: true
