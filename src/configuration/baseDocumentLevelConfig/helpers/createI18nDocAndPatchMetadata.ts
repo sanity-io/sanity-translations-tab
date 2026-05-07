@@ -1,4 +1,5 @@
 import {SanityClient, SanityDocumentLike} from 'sanity'
+import {randomKey} from '@sanity/util/content'
 
 export const createI18nDocAndPatchMetadata = (
   translatedDoc: SanityDocumentLike,
@@ -9,9 +10,15 @@ export const createI18nDocAndPatchMetadata = (
 ): void => {
   translatedDoc[languageField] = localeId
   const translations = translationMetadata.translations as Record<string, any>[]
-  const existingLocaleKey = translations.find((translation) => translation._key === localeId)
-  const operation = existingLocaleKey ? 'replace' : 'after'
-  const location = existingLocaleKey ? `translations[_key == "${localeId}"]` : 'translations[-1]'
+  // Match by v5 `language` field, falling back to legacy v4 `_key` so that documents
+  // created before sanity-plugin-internationalized-array v5 are still updated in-place.
+  const existingLocaleEntry = translations.find(
+    (translation) => translation.language === localeId || translation._key === localeId,
+  )
+  const operation = existingLocaleEntry ? 'replace' : 'after'
+  const location = existingLocaleEntry
+    ? `translations[language == "${localeId}" || _key == "${localeId}"]`
+    : 'translations[-1]'
 
   //remove system fields
   const {_updatedAt, _createdAt, ...rest} = translatedDoc
@@ -22,8 +29,11 @@ export const createI18nDocAndPatchMetadata = (
       .patch(translationMetadata._id, (p) =>
         p.insert(operation, location, [
           {
-            _key: localeId,
+            // sanity-plugin-internationalized-array v5 stores the locale on a dedicated
+            // `language` field and expects `_key` to be a unique random key.
+            _key: randomKey(),
             _type: 'internationalizedArrayReferenceValue',
+            language: localeId,
             value: {
               _type: 'reference',
               _ref,
