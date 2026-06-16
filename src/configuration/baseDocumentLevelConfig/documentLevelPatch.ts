@@ -46,8 +46,10 @@ export const documentLevelPatch = async (
   }
 
   //the id of the translated document should be on the metadata if it exists
+  // Match by v5 `language` field, with a fallback to legacy v4 `_key` so that documents
+  // created before sanity-plugin-internationalized-array v5 continue to resolve.
   const i18nDocId = (translationMetadata.translations as Array<Record<string, any>>).find(
-    (translation) => translation._key === localeId,
+    (translation) => translation.language === localeId || translation._key === localeId,
   )?.value?._ref
 
   if (i18nDocId) {
